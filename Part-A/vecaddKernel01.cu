@@ -16,7 +16,7 @@ __global__ void AddVectors(const float* A, const float* B, float* C, int N)
     for(int i = index; i< N; i+=stride )
         C[i] = A[i]+B[i];*/
     while(index<N){
-        C[index] = A[index]+B[index]
+        C[index] = A[index]+B[index];
         index +=blockDim.x*gridDim.x;
     }
     
