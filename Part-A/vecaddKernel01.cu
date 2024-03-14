@@ -13,7 +13,7 @@ __global__ void AddVectors(const float* A, const float* B, float* C, int N)
 {
     //int index = (blockDim.x * blockIdx.x) + threadIdx.x;
     int blockIndex = (blockDim.x * blockIdx.x) + threadIdx.x;
-    int i = blockIndex+(threadIdx.x*N);
+    int i = blockIndex+(threadIdx.x);
     if(i<N)
     C[i] = A[i]+B[i];
     
