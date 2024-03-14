@@ -18,5 +18,5 @@ __global__ void AddVectors(const float* A, const float* B, float* C, int N)
    /* while(i<N)
         C[i] = A[i]+B[i];
         i+= blockDim.x;*/
-    c[threadIdx.x] = A[threadIdx.x]+ B[threadIdx.x] 
+    C[threadIdx.x] = A[threadIdx.x]+ B[threadIdx.x]; 
 }
