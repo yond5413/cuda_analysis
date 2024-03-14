@@ -17,5 +17,5 @@ __global__ void AddVectors(const float* A, const float* B, float* C, int N)
         C[i] = A[i]+B[i];*/
     while(i<N)
         C[i] = A[i]+B[i];
-        i+= blockDim.x
+        i+= blockDim.x;
 }
