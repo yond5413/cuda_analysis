@@ -15,7 +15,7 @@ OPTIONS   :=  -O3
 #--maxrregcount=100 --ptxas-options -v 
 
 TAR_FILE_NAME  := yd2696.tar
-EXECS :=  vecadd00 matmult00
+EXECS :=  vecadd00 vecadd01 matmult00 
 all:$(EXECS)
 
 #######################################################################
