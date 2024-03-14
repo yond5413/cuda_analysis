@@ -11,13 +11,9 @@ Created: 2024-03-14
 #include <stdio.h>
 __global__ void AddVectors(const float* A, const float* B, float* C, int N)
 {
-    int index = (blockDim.x * blockIdx.x) + threadIdx.x;
-    /*int stride = blockDim.x*gridDim.x;
-    for(int i = index; i< N; i+=stride )
-        C[i] = A[i]+B[i];*/
-    while(index<N){
-        C[index] = A[index]+B[index];
-        index +=blockDim.x*gridDim.x;
-    }
+    //int index = (blockDim.x * blockIdx.x) + threadIdx.x;
+    int i = threadIdx.x;
+    if(i<N)
+    C[i] = A[i]+B[i]
     
 }
