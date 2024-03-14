@@ -8,7 +8,7 @@ Created: 2024-03-14
 /// with coalesced memory access.
 /// 
 */
-
+#include <stdio.h>
 __global__ void AddVectors(const float* A, const float* B, float* C, int N)
 {
     int i = (blockDim.x * blockIdx.x) + threadIdx.x;
