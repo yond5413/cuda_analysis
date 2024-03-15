@@ -17,8 +17,9 @@ __global__ void AddVectors(const float* A, const float* B, float* C, int N)
     gridDim provides number of blocks
     blocks provides number of threads
     */
+    int foo = blockDim.x*gridDim.x*N; 
     int i = threadIdx.x + (blockIdx.x*blockDim.x);
-    printf("blockDim: %d, gridDim: %d, i:%d, N:%d \n",blockDim.x,gridDim.x,i, N);
+    printf("blockDim: %d, gridDim: %d, i:%d, N:%d, foo: %d \n",blockDim.x,gridDim.x,i, N, foo);
     while(i<N){
         C[i] = A[i]+B[i];
         i+= blockDim.x*gridDim.x;
