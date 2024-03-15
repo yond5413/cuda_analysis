@@ -140,7 +140,7 @@ int main(int argc, char** argv)
             break;
     }
     printf("Test %s \n", (i == N) ? "PASSED" : "FAILED");
-    printf("N = %d, &N = %p, i = %d, &i = %p\n", N, &N, i, &i);
+    //printf("N = %d, &N = %p, i = %d, &i = %p\n", N, &N, i, &i);
     // Clean up and exit.
     Cleanup(true);
 }
