@@ -24,7 +24,7 @@ __global__ void AddVectors(const float* A, const float* B, float* C, int N)
     //while(i<N){
     while(i<N){
         C[i] = A[i]+B[i];
-        printf("i: %d, i+stride: %d",i,(i+stride));
+        printf("i: %d, i+stride: %d \n",i,(i+stride));
         i+=stride;
 
         //i+= blockDim.x*gridDim.x;
