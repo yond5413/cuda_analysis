@@ -22,7 +22,7 @@ __global__ void AddVectors(const float* A, const float* B, float* C, int N)
     //printf("blockDim: %d, gridDim: %d, i:%d, N:%d, foo: %d, tid: %d, blockid: %d \n",blockDim.x,gridDim.x,i, N, foo,threadIdx.x,blockIdx.x);
     //printf("tid: %d, blockid: %d \n", threadIdx.x,blockIdx.x);
     //while(i<N){
-    if(i<N){
+    while(i<N){
         C[i] = A[i]+B[i];
         i+=stride; 
         //i+= blockDim.x*gridDim.x;
