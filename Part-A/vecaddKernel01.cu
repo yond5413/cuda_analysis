@@ -23,11 +23,11 @@ __global__ void AddVectors(const float* A, const float* B, float* C, int N)
     //printf("tid: %d, blockid: %d \n", threadIdx.x,blockIdx.x);
     //while(i<N){
     while(i<N){
+        if(i<N){
         C[i] = A[i]+B[i];
-        printf("i: %d, i+stride: %d \n",i,(i+stride));
+        printf("i: %d, i+stride: %d, N \n",i,(i+stride),N);
+        }
         i+=stride;
-
-        //i+= blockDim.x*gridDim.x;
     }
 }
     
