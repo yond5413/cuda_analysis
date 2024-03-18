@@ -46,7 +46,8 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
   int blockRow = blockIdx.y;
   int blockCol = blockIdx.x;
   // Each thread block computes one sub-matrix Csub of C
-  Matrix Csub = getSubMatrix(C, blockRow, blockCol);
+  //Matrix Csub = getSubMatrix(C, blockRow, blockCol);
+  Csub = &C.elements[C.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * block_col];
   // Each thread computes four elements of Csub
   // by accumulating results into Cvalue0, Cvalue1, Cvalue2, and Cvalue3
   float Cvalue0 = 0;
@@ -56,18 +57,17 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
   // Thread row and column within Csub
   int row = threadIdx.y;
   int col = threadIdx.x;
-  // Loop over all the sub-matrices of A and B that are
-  // required to compute Csub
-  // Multiply each pair of sub-matrices together
-  // and accumulate the results
+  
   for (int m = 0; m < (A.width / BLOCK_SIZE); ++m) {
       // Get sub-matrix Asub of A
-      Matrix Asub = getSubMatrix(A, blockRow, m);
+      //Matrix Asub = getSubMatrix(A, blockRow, m);
       // Get sub-matrix Bsub of B
-      Matrix Bsub = getSubMatrix(B, m, blockCol);
+      //Matrix Bsub = getSubMatrix(B, m, blockCol);
       // Shared memory used to store Asub and Bsub respectively
-      __shared__ float As[BLOCK_SIZE][BLOCK_SIZE];
-      __shared__ float Bs[BLOCK_SIZE][BLOCK_SIZE];
+      Asub = &A.elements[A.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * m];
+      Bsub =&B.elements[B.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * m];
+      __shared__ float shared_A[BLOCK_SIZE][BLOCK_SIZE];
+      __shared__ float shared_B[BLOCK_SIZE][BLOCK_SIZE];
       // Load Asub and Bsub from device memory to shared memory
       // Each thread loads one element of each sub-matrix
       As[row][col] = getElement(Asub, row, col);
@@ -76,12 +76,13 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
       // before starting the computation
       __syncthreads();
       // Multiply Asub and Bsub together
+      #pragma unroll
       for (int e = 0; e < BLOCK_SIZE; ++e) {
-          float tempA = As[row][e];
-          float tempB0 = Bs[e][col];
-          float tempB1 = Bs[e][col + 1];
-          float tempB2 = Bs[e][col + 2];
-          float tempB3 = Bs[e][col + 3];
+          float tempA = shared_A[row][e];
+          float tempB0 = shared_B[e][col];
+          float tempB1 = shared_B[e][col + 1];
+          float tempB2 = shared_B[e][col + 2];
+          float tempB3 = shared_B[e][col + 3];
           Cvalue0 += tempA * tempB0;
           Cvalue1 += tempA * tempB1;
           Cvalue2 += tempA * tempB2;
@@ -94,8 +95,12 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
   }
   // Write Csub to device memory
   // Each thread writes one element
-  setElement(Csub, row, col, Cvalue0);
+  Csub[thread_row * C.stride + thread_col] = Cvalue0;
+  Csub[thread_row * C.stride*2 + thread_col] = Cvalue1;
+  Csub[thread_row * C.stride*3 + thread_col] = Cvalue2;
+  Csub[thread_row * C.stride*4 + thread_col] = Cvalue3;
+  /*setElement(Csub, row, col, Cvalue0);
   setElement(Csub, row, col + 1, Cvalue1);
   setElement(Csub, row + 1, col, Cvalue2);
-  setElement(Csub, row + 1, col + 1, Cvalue3);
+  setElement(Csub, row + 1, col + 1, Cvalue3);*/
 }
