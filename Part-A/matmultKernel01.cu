@@ -106,9 +106,16 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
   // Write Csub to device memory
   // Each thread writes one element
   Csub[thread_row * C.stride + thread_col] = Cvalue0;
-  Csub[thread_row * C.stride*2 + thread_col] = Cvalue1;
-  Csub[thread_row * C.stride*3 + thread_col] = Cvalue2;
-  Csub[thread_row * C.stride*4 + thread_col] = Cvalue3;
+    Csub[thread_row * C.stride + thread_col + BLOCK_SIZE] = Cvalue1;
+Csub[thread_row * C.stride + thread_col + 2 * BLOCK_SIZE] = Cvalue2;
+Csub[thread_row * C.stride + thread_col + 3 * BLOCK_SIZE] = Cvalue3;
+
+  // second idea
+ // Csub[thread_row * C.stride + thread_col] = Cvalue0;
+  //Csub[thread_row * C.stride*2 + thread_col] = Cvalue1;
+  //Csub[thread_row * C.stride*3 + thread_col] = Cvalue2;
+  //Csub[thread_row * C.stride*4 + thread_col] = Cvalue3;
+  // origninal below:
   /*setElement(Csub, row, col, Cvalue0);
   setElement(Csub, row, col + 1, Cvalue1);
   setElement(Csub, row + 1, col, Cvalue2);
