@@ -6,7 +6,7 @@ Modified by Yonathan Daniel
 
 #include "matmultKernel.h"
 
-#define FOOTPRINT_SIZE BLOCK_SIZE
+//#define FOOTPRINT_SIZE BLOCK_SIZE
 // Define a gpu kernel to perform matrix multiplication
 // of A x B = C.
 
