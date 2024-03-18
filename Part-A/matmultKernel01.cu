@@ -72,14 +72,14 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
       //Matrix Bsub = getSubMatrix(B, m, blockCol);
       // Shared memory used to store Asub and Bsub respectively
       Asub = &A.elements[A.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * m];
-      Bsub =&B.elements[B.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * m];
+      Bsub = &B.elements[B.stride * BLOCK_SIZE * m + BLOCK_SIZE * block_col];
+      //Bsub =&B.elements[B.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * m];
       __shared__ float shared_A[BLOCK_SIZE][BLOCK_SIZE];
       __shared__ float shared_B[BLOCK_SIZE][BLOCK_SIZE];
       // Load Asub and Bsub from device memory to shared memory
       // Each thread loads one element of each sub-matrix
       shared_A[row][col] = Asub[thread_row * A.stride + thread_col];//getElement(Asub, row, col);
-      shared_B[row][col] = Bsub = &B.elements[B.stride * BLOCK_SIZE * m + BLOCK_SIZE * block_col];
-      //Bsub[thread_row * B.stride + thread_col];
+      shared_B[row][col] = Bsub[thread_row * B.stride + thread_col];
       // Synchronize to make sure the sub-matrices are loaded
       // before starting the computation
       __syncthreads();
