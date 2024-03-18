@@ -43,10 +43,17 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
   Csub = &C.elements[C.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * block_col];
   */
   // Block row and column
-  int blockRow = blockIdx.y;
+  /*int blockRow = blockIdx.y;
   int blockCol = blockIdx.x;
   // Each thread block computes one sub-matrix Csub of C
-  //Matrix Csub = getSubMatrix(C, blockRow, blockCol);
+  //Matrix Csub = getSubMatrix(C, blockRow, blockCol);*/
+  float *Asub, *Bsub, *Csub;
+  // Putting these into registers speeds access.
+  int thread_row = threadIdx.y;
+  int thread_col = threadIdx.x;
+  int block_row = blockIdx.y;
+  int block_col = blockIdx.x;
+
   Csub = &C.elements[C.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * block_col];
   // Each thread computes four elements of Csub
   // by accumulating results into Cvalue0, Cvalue1, Cvalue2, and Cvalue3
