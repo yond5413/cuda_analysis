@@ -35,7 +35,7 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
   int blockRow = blockIdx.y;
   int blockCol = blockIdx.x;
   // Each thread block computes one sub-matrix Csub of C
-  Matrix Csub = GetSubMatrix(C, blockRow, blockCol);
+  Matrix Csub = getSubMatrix(C, blockRow, blockCol);
   // Each thread computes four elements of Csub
   // by accumulating results into Cvalue0, Cvalue1, Cvalue2, and Cvalue3
   float Cvalue0 = 0;
@@ -51,16 +51,16 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
   // and accumulate the results
   for (int m = 0; m < (A.width / BLOCK_SIZE); ++m) {
       // Get sub-matrix Asub of A
-      Matrix Asub = GetSubMatrix(A, blockRow, m);
+      Matrix Asub = getSubMatrix(A, blockRow, m);
       // Get sub-matrix Bsub of B
-      Matrix Bsub = GetSubMatrix(B, m, blockCol);
+      Matrix Bsub = getSubMatrix(B, m, blockCol);
       // Shared memory used to store Asub and Bsub respectively
       __shared__ float As[BLOCK_SIZE][BLOCK_SIZE];
       __shared__ float Bs[BLOCK_SIZE][BLOCK_SIZE];
       // Load Asub and Bsub from device memory to shared memory
       // Each thread loads one element of each sub-matrix
-      As[row][col] = GetElement(Asub, row, col);
-      Bs[row][col] = GetElement(Bsub, row, col);
+      As[row][col] = getElement(Asub, row, col);
+      Bs[row][col] = getElement(Bsub, row, col);
       // Synchronize to make sure the sub-matrices are loaded
       // before starting the computation
       __syncthreads();
@@ -83,8 +83,8 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
   }
   // Write Csub to device memory
   // Each thread writes one element
-  SetElement(Csub, row, col, Cvalue0);
-  SetElement(Csub, row, col + 1, Cvalue1);
-  SetElement(Csub, row + 1, col, Cvalue2);
-  SetElement(Csub, row + 1, col + 1, Cvalue3);
+  setElement(Csub, row, col, Cvalue0);
+  setElement(Csub, row, col + 1, Cvalue1);
+  setElement(Csub, row + 1, col, Cvalue2);
+  setElement(Csub, row + 1, col + 1, Cvalue3);
 }
