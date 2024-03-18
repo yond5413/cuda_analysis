@@ -16,6 +16,17 @@ return A.elements[row*A.stride+col];
 __device__ void setElement(Matrix A, int row, int col, float val){
 A.elements[row*A.stride*BLOCK_SIZE +col*BLOCK_SIZE] = val;
 }
+
+__device__ Matrix getSubMatrix(Matrix A, int row, int col)
+{
+    Matrix Asub;
+    Asub.width    = BLOCK_SIZE;
+    Asub.height   = BLOCK_SIZE;
+    Asub.stride   = A.stride;
+    Asub.elements = &A.elements[A.stride * BLOCK_SIZE * row
+                                         + BLOCK_SIZE * col];
+    return Asub;
+}
 ///// Helper end functions end/////
 
 __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
