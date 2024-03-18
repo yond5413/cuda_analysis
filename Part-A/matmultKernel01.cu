@@ -2,6 +2,8 @@
 For COMS E6998(HPML) Spring 2024
 Modified by Yonathan Daniel
 */
+#include <stdio.h> // for debugging
+
 #include "matmultKernel.h"
 
 #define FOOTPRINT_SIZE BLOCK_SIZE
