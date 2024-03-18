@@ -64,7 +64,7 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
   // Thread row and column within Csub
   int row = threadIdx.y;
   int col = threadIdx.x;
-  
+  printf("blockIdx.x: %d, blockIdx.y: %d, threadIdx.x: %d, threadIdx.y: %d\n", blockIdx.x, blockIdx.y, threadIdx.x, threadIdx.y);
   for (int m = 0; m < (A.width / BLOCK_SIZE); ++m) {
       // Get sub-matrix Asub of A
       //Matrix Asub = getSubMatrix(A, blockRow, m);
