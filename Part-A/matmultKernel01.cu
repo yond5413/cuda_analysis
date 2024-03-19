@@ -32,92 +32,67 @@ __device__ Matrix getSubMatrix(Matrix A, int row, int col)
 ///// Helper end functions end/////
 
 __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
-  /*// matrix blocks
-  float *Asub, *Bsub, *Csub;
-  // Putting these into registers speeds access.
-  int thread_row = threadIdx.y;
-  int thread_col = threadIdx.x;
-  int block_row = blockIdx.y;
-  int block_col = blockIdx.x;
-  //????
-  // Each THREAD BLOCK computes one sub matrix Csub of C
-  // EACH THREAD creates its own matrix descriptor Csub
-  Csub = &C.elements[C.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * block_col];
-  */
-  // Block row and column
-  /*int blockRow = blockIdx.y;
-  int blockCol = blockIdx.x;
-  // Each thread block computes one sub-matrix Csub of C
-  //Matrix Csub = getSubMatrix(C, blockRow, blockCol);*/
-  float *Asub, *Bsub, *Csub;
-  // Putting these into registers speeds access.
-  int thread_row = threadIdx.y;
-  int thread_col = threadIdx.x;
-  int block_row = blockIdx.y;
-  int block_col = blockIdx.x;
+   // Matrix blocks
+   float *Asub, *Bsub, *Csub;
 
-  Csub = &C.elements[C.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * block_col];
-  // Each thread computes four elements of Csub
-  // by accumulating results into Cvalue0, Cvalue1, Cvalue2, and Cvalue3
-  float Cvalue0 = 0;
-  float Cvalue1 = 0;
-  float Cvalue2 = 0;
-  float Cvalue3 = 0;
-  // Thread row and column within Csub
-  //int row = threadIdx.y;
-  //int col = threadIdx.x;
-  printf("blockIdx.x: %d, blockIdx.y: %d, threadIdx.x: %d, threadIdx.y: %d\n", blockIdx.x, blockIdx.y, threadIdx.x, threadIdx.y);
-  for (int m = 0; m < (A.width / BLOCK_SIZE); ++m) {
-      // Get sub-matrix Asub of A
-      //Matrix Asub = getSubMatrix(A, blockRow, m);
-      // Get sub-matrix Bsub of B
-      //Matrix Bsub = getSubMatrix(B, m, blockCol);
-      // Shared memory used to store Asub and Bsub respectively
-      Asub = &A.elements[A.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * m];
-      Bsub = &B.elements[B.stride * BLOCK_SIZE * m + BLOCK_SIZE * block_col];
-      //Bsub =&B.elements[B.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * m];
-      __shared__ float shared_A[BLOCK_SIZE][BLOCK_SIZE];
-      __shared__ float shared_B[BLOCK_SIZE][BLOCK_SIZE];
-      // Load Asub and Bsub from device memory to shared memory
-      // Each thread loads one element of each sub-matrix
-      shared_A[thread_row][thread_col] = Asub[thread_row * A.stride + thread_col];//getElement(Asub, row, col);
-      shared_B[thread_row][thread_col] = Bsub[thread_row * B.stride + thread_col];
-      // Synchronize to make sure the sub-matrices are loaded
-      // before starting the computation
-      __syncthreads();
-      // Multiply Asub and Bsub together
-      #pragma unroll
-      for (int e = 0; e < BLOCK_SIZE; ++e) {
-          float tempA = shared_A[thread_row][e];
-          float tempB0 = shared_B[e][thread_col];
-          float tempB1 = shared_B[e][thread_col + 1];
-          float tempB2 = shared_B[e][thread_col + 2];
-          float tempB3 = shared_B[e][thread_col + 3];
-          Cvalue0 += tempA * tempB0;
-          Cvalue1 += tempA * tempB1;
-          Cvalue2 += tempA * tempB2;
-          Cvalue3 += tempA * tempB3;
-      }
-      // Synchronize to make sure that the preceding
-      // computation is done before loading two new
-      // sub-matrices of A and B in the next iteration
-      __syncthreads();
-  }
-  // Write Csub to device memory
-  // Each thread writes one element
-  Csub[thread_row * C.stride + thread_col] = Cvalue0;
-    Csub[thread_row * C.stride + thread_col + BLOCK_SIZE] = Cvalue1;
-Csub[thread_row * C.stride + thread_col + 2 * BLOCK_SIZE] = Cvalue2;
-Csub[thread_row * C.stride + thread_col + 3 * BLOCK_SIZE] = Cvalue3;
+   // Putting these into registers speeds access.
+   int thread_row = threadIdx.y;
+   int thread_col = threadIdx.x;
+   int block_row = blockIdx.y;
+   int block_col = blockIdx.x;
 
-  // second idea
- // Csub[thread_row * C.stride + thread_col] = Cvalue0;
-  //Csub[thread_row * C.stride*2 + thread_col] = Cvalue1;
-  //Csub[thread_row * C.stride*3 + thread_col] = Cvalue2;
-  //Csub[thread_row * C.stride*4 + thread_col] = Cvalue3;
-  // origninal below:
-  /*setElement(Csub, row, col, Cvalue0);
-  setElement(Csub, row, col + 1, Cvalue1);
-  setElement(Csub, row + 1, col, Cvalue2);
-  setElement(Csub, row + 1, col + 1, Cvalue3);*/
+   // Each THREAD BLOCK computes one submatrix Csub of C
+   // EACH THREAD creates its own matrix descriptor Csub
+   Csub = &C.elements[C.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * block_col];
+
+   // Each thread computes one element of Csub in its copy of Cvalue
+   float Cvalue[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+
+   // Loop over all submatrices in block_row of A and block_col of B
+   // required to compute Csub. Block multiply each pair of submatrices
+   // and accumulate results
+   for (int m = 0; m < (A.width / BLOCK_SIZE); ++m) {
+       // Get Asub and Bsub descriptors
+       Asub = &A.elements[A.stride * BLOCK_SIZE * block_row + BLOCK_SIZE * m];
+       Bsub = &B.elements[B.stride * BLOCK_SIZE * m + BLOCK_SIZE * block_col];
+
+       // Copy ELEMENTS OF Asub and Bsub into shared memory
+       // EACH THREAD loads ONE ELEMENT of Asub and ONE of Bsub
+       // Notice: it does not need to be the element it requires to
+       //         compute its Cvalue, as long as all elements are
+       //         collaboratively read.
+
+       // Notice: every thread declares shared_A and shared_B in shared memory
+       //         even though a thread block has only one shared_A and one shared_B
+       __shared__ float shared_A[BLOCK_SIZE][BLOCK_SIZE];
+       __shared__ float shared_B[BLOCK_SIZE][BLOCK_SIZE];
+
+       // Each thread copies just one element of shared_A and shared_B
+       shared_A[thread_row][thread_col] = Asub[thread_row * A.stride + thread_col];
+       shared_B[thread_row][thread_col] = Bsub[thread_row * B.stride + thread_col];
+
+       // Synchronize to ensure all elements are read
+       __syncthreads();
+
+       // Do an inproduct of one row of shared_A and one col of shared_B
+       // computing one Cvalue by accumulation
+#pragma unroll
+       for (int e = 0; e < BLOCK_SIZE; ++e) {
+           Cvalue[0] += shared_A[thread_row][e] * shared_B[e][thread_col];
+           Cvalue[1] += shared_A[thread_row + 8][e] * shared_B[e][thread_col];
+           Cvalue[2] += shared_A[thread_row + 16][e] * shared_B[e][thread_col];
+           Cvalue[3] += shared_A[thread_row + 24][e] * shared_B[e][thread_col];
+       }
+
+       // Synchronize to ensure all Cvalues have been incremented
+       // before reading in the next shared_A AND shared_B BLOCKS
+       __syncthreads();
+   }
+
+   // Write Csub to GLOBAL memory.
+   // Each thread writes its own cell value.
+   Csub[thread_row * C.stride + thread_col] = Cvalue[0];
+   Csub[(thread_row + 8) * C.stride + thread_col] = Cvalue[1];
+   Csub[(thread_row + 16) * C.stride + thread_col] = Cvalue[2];
+   Csub[(thread_row + 24) * C.stride + thread_col] = Cvalue[3];
 }
