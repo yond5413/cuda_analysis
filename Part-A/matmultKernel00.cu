@@ -12,7 +12,7 @@
 /// Copy this file and modify the MatMultKernel device function for
 /// each of your experiments. 
 ///
-
+#include <stdio.h>
 #include "matmultKernel.h"
 
 #define FOOTPRINT_SIZE BLOCK_SIZE
