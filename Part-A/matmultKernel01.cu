@@ -109,10 +109,6 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
   shared_A[thread_row+1][thread_col+1] = Asub[(thread_row+1) * A.stride + thread_col+1];
   shared_B[thread_row+1][thread_col+1] = Bsub[(thread_row+1) * B.stride + thread_col+1];*/
   // Synchronize to ensure all elements are read
-  __syncthreads();
-
-  // Do an inproduct of one row of shared_A and one col of shared_B
-  // computing one Cvalue by accumulation
   int mat_x,mat_y;
   if (thread_row%2 ==0){
     int mat_x = thread_row/2;
@@ -122,6 +118,11 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
     int mat_x = (int)(thread_row/2);
     int mat_y = thread_col +16;
   }
+  __syncthreads();
+
+  // Do an inproduct of one row of shared_A and one col of shared_B
+  // computing one Cvalue by accumulation
+  
   #pragma unroll  
   for(int e=0; e<FOOTPRINT_SIZE; ++e){
     Cvalue += shared_A[mat_x][e] * shared_B[e][mat_y];
@@ -141,7 +142,7 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
 }
 // Write Csub to GLOBAL memory.
 // Each thread writes its own cell value.
-int mat_x,mat_y;
+/*int mat_x,mat_y;
   if (thread_row%2 ==0){
     int mat_x = thread_row/2;
     int mat_y = thread_col;
@@ -149,7 +150,7 @@ int mat_x,mat_y;
   else{
     int mat_x = (int)(thread_row/2);
     int mat_y = thread_col +16;
-  }
+  }*/
 Csub[mat_x * C.stride + mat_y] = Cvalue;
 Csub[(mat_x+8) * C.stride + (mat_y)] = Cvalue1;
 Csub[(mat_x+16) * C.stride + (mat_y)] = Cvalue2;
