@@ -42,7 +42,7 @@ int block_col = blockIdx.x;
 
 // Each THREAD BLOCK computes one sub matrix Csub of C
 // EACH THREAD creates its own matrix descriptor Csub
-Csub = &C.elements[C.stride * BLOCK_SIZE *2 * block_row  + BLOCK_SIZE *2 * block_col ];
+Csub = &C.elements[C.stride * BLOCK_SIZE *2 * block_row  + BLOCK_SIZE * block_col ];
 
 // Each thread computes one element of Csub in its copy of CValue
 float Cvalue,Cvalue1,Cvalue2,Cvalue3;
@@ -64,8 +64,8 @@ for (int m = 0;  m < (A.width / (BLOCK_SIZE)); ++m){
 
   // Notice: every thread declares shared_A and shared_B in shared memory
   //         even though a thread block has only one shared_A and one shared_B
-  __shared__ float shared_A[BLOCK_SIZE *2][BLOCK_SIZE *2];
-  __shared__ float shared_B[BLOCK_SIZE *2][BLOCK_SIZE *2];
+  __shared__ float shared_A[BLOCK_SIZE ][BLOCK_SIZE ];
+  __shared__ float shared_B[BLOCK_SIZE ][BLOCK_SIZE ];
 
   // Each thread copies just one element of shared_A and one element of shared_B
   shared_A[thread_row][thread_col] = Asub[thread_row * A.stride + thread_col];
