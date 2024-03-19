@@ -45,7 +45,8 @@ To compute C_sub
 Main difference thread to compute offsets in block
     */
 __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
-  printf("block_size: %d,foot: %d \n",BLOCK_SIZE, FOOTPRINT_SIZE);
+  //printf("block_size: %d,foot: %d \n",BLOCK_SIZE, FOOTPRINT_SIZE);
+  // 16 , 32
   float *Asub, *Bsub, *Csub;
 // Putting these into registers speeds access.
 int thread_row = threadIdx.y;
