@@ -47,16 +47,16 @@ int block_col = blockIdx.x;
 Csub = &C.elements[C.stride * BLOCK_SIZE * block_row  + BLOCK_SIZE * block_col ];
 
 // Each thread computes one element of Csub in its copy of CValue
-float Cvalue,Cvalue1,Cvalue2,Cvalue3;
+float Cvalue = 0.0f,Cvalue1=0.0f,Cvalue2=0.0f,Cvalue3=0.0f;
 
 
 // Loop over all sub matrices in block_row of A and block_col of B
 // required to compute Csub. Block multiply each pair of sub matrices
 // and accumulate results
-for (int m = 0;  m < (A.width / (BLOCK_SIZE)); ++m){
+for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
   // Get Asub and Bsub descriptors
-  Asub = &A.elements[A.stride * BLOCK_SIZE  * block_row + BLOCK_SIZE * m];
-  Bsub = &B.elements[B.stride * BLOCK_SIZE  * m + BLOCK_SIZE  * block_col];
+  Asub = &A.elements[A.stride * FOOTPRINT_SIZE  * block_row + FOOTPRINT_SIZE * m];//&A.elements[A.stride * BLOCK_SIZE  * block_row + BLOCK_SIZE * m];
+  Bsub = &B.elements[B.stride * FOOTPRINT_SIZE  * m + FOOTPRINT_SIZE  * block_col];//&B.elements[B.stride * BLOCK_SIZE  * m + BLOCK_SIZE  * block_col];
 
   // Copy ELEMENTS OF  ASub and Bsub into shared memory
   // EACH THREAD loads ONE ELEMENT of ASub and ONE of Bsub
@@ -66,8 +66,8 @@ for (int m = 0;  m < (A.width / (BLOCK_SIZE)); ++m){
 
   // Notice: every thread declares shared_A and shared_B in shared memory
   //         even though a thread block has only one shared_A and one shared_B
-  __shared__ float shared_A[BLOCK_SIZE ][BLOCK_SIZE ];
-  __shared__ float shared_B[BLOCK_SIZE ][BLOCK_SIZE ];
+  __shared__ float shared_A[FOOTPRINT_SIZE ][FOOTPRINT_SIZE ];
+  __shared__ float shared_B[FOOTPRINT_SIZE ][FOOTPRINT_SIZE ];
 
   // Each thread copies just one element of shared_A and one element of shared_B
   shared_A[thread_row][thread_col] = Asub[thread_row * A.stride + thread_col];
