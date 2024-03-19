@@ -67,6 +67,15 @@ float Cvalue = 0.0f,Cvalue1=0.0f,Cvalue2=0.0f,Cvalue3=0.0f;
 // Loop over all sub matrices in block_row of A and block_col of B
 // required to compute Csub. Block multiply each pair of sub matrices
 // and accumulate results
+int mat_x,mat_y;
+  if (thread_row%2 ==0){
+    int mat_x = thread_row/2;
+    int mat_y = thread_col;
+  }
+  else{
+    int mat_x = (int)(thread_row/2);
+    int mat_y = thread_col +16;
+  }
 for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
   // Get Asub and Bsub descriptors
   Asub = &A.elements[A.stride * FOOTPRINT_SIZE  * block_row + FOOTPRINT_SIZE * m];//&A.elements[A.stride * BLOCK_SIZE  * block_row + BLOCK_SIZE * m];
@@ -112,15 +121,7 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
 
   // Do an inproduct of one row of shared_A and one col of shared_B
   // computing one Cvalue by accumulation
-  int mat_x,mat_y;
-  if (thread_row%2 ==0){
-    int mat_x = thread_row/2;
-    int mat_y = thread_col;
-  }
-  else{
-    int mat_x = (int)(thread_row/2);
-    int mat_y = thread_col +16;
-  }
+  
   #pragma unroll  
   for(int e=0; e<FOOTPRINT_SIZE; ++e){
     Cvalue += shared_A[mat_x][e] * shared_B[e][mat_y];
