@@ -87,7 +87,7 @@ for (int m = 0;  m < (A.width / (BLOCK_SIZE)); ++m){
   // Do an inproduct of one row of shared_A and one col of shared_B
   // computing one Cvalue by accumulation
 #pragma unroll  
-  for(int e=0; e<BLOCK_SIZE *2; ++e){
+  for(int e=0; e<BLOCK_SIZE; ++e){
       Cvalue += shared_A[thread_row][e] * shared_B[e][thread_col];
       Cvalue1 += shared_A[thread_row][e] * shared_B[e][thread_col+1];
       Cvalue2 += shared_A[thread_row+1][e] * shared_B[e][thread_col];
