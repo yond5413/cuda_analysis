@@ -33,7 +33,8 @@ __device__ Matrix getSubMatrix(Matrix A, int row, int col)
 
 __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
 /// matrix 
-printf('%d, %d',FOOTPRINT_SIZE,BLOCK_SIZE);
+printf("%d, %d", FOOTPRINT_SIZE, BLOCK_SIZE);
+
 float *Asub, *Bsub, *Csub;
 // Putting these into registers speeds access.
 int thread_row = threadIdx.y;
