@@ -91,7 +91,7 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
   shared_B[thread_row+16][thread_col] = Bsub[(thread_row+16)*B.stride+thread_col];
 
   shared_A[thread_row][thread_col+16] = Asub[(thread_row)*A.stride+thread_col+16];
-  shared_B[thread_row][thread_col+16] = Bsub[(thread_row+)*B.stride+thread_col+16];
+  shared_B[thread_row][thread_col+16] = Bsub[(thread_row)*B.stride+thread_col+16];
 
   shared_A[thread_row+16][thread_col+16] = Asub[(thread_row+16)*A.stride+thread_col+16];
   shared_B[thread_row+16][thread_col+16] = Bsub[(thread_row+16)*B.stride+thread_col+16];
