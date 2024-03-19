@@ -35,8 +35,8 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
 /// matrix blocks
 float *Asub, *Bsub, *Csub;
 // Putting these into registers speeds access.
-int thread_row = threadIdx.y*2;
-int thread_col = threadIdx.x*2;
+int thread_row = threadIdx.y;
+int thread_col = threadIdx.x;
 int block_row = blockIdx.y;
 int block_col = blockIdx.x;
 
@@ -51,10 +51,10 @@ float Cvalue,Cvalue1,Cvalue2,Cvalue3;
 // Loop over all sub matrices in block_row of A and block_col of B
 // required to compute Csub. Block multiply each pair of sub matrices
 // and accumulate results
-for (int m = 0;  m < (A.width / (BLOCK_SIZE *2)); ++m){
+for (int m = 0;  m < (A.width / (BLOCK_SIZE)); ++m){
   // Get Asub and Bsub descriptors
-  Asub = &A.elements[A.stride * BLOCK_SIZE *2 * block_row + BLOCK_SIZE *2 * m];
-  Bsub = &B.elements[B.stride * BLOCK_SIZE *2 * m + BLOCK_SIZE *2 * block_col];
+  Asub = &A.elements[A.stride * BLOCK_SIZE  * block_row + BLOCK_SIZE * m];
+  Bsub = &B.elements[B.stride * BLOCK_SIZE  * m + BLOCK_SIZE  * block_col];
 
   // Copy ELEMENTS OF  ASub and Bsub into shared memory
   // EACH THREAD loads ONE ELEMENT of ASub and ONE of Bsub
