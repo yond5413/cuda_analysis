@@ -112,12 +112,27 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
 
   // Do an inproduct of one row of shared_A and one col of shared_B
   // computing one Cvalue by accumulation
-#pragma unroll  
+  int mat_x,mat_y;
+  if (thread_row%2 ==0){
+    int mat_x = thread_row/2;
+    int mat_y = thread_col;
+  }
+  else{
+    int mat_x = (int)(thread_row/2);
+    int mat_y = thread_col +16;
+  }
+  #pragma unroll  
   for(int e=0; e<FOOTPRINT_SIZE; ++e){
+    Cvalue += shared_A[mat_x][e] * shared_B[e][mat_y];
+    Cvalue1 += shared_A[mat_x+8][e] * shared_B[e][mat_y+8];
+    Cvalue2 += shared_A[mat_x+16][e] * shared_B[e][mat_y+16];
+    Cvalue3 += shared_A[mat_x+24][e] * shared_B[e][mat_y+24];
+    
+    /*
       Cvalue += shared_A[thread_row][e] * shared_B[e][thread_col];
       Cvalue1 += shared_A[thread_row][e] * shared_B[e][thread_col+1];
       Cvalue2 += shared_A[thread_row+1][e] * shared_B[e][thread_col];
-      Cvalue3 += shared_A[thread_row+1][e] * shared_B[e][thread_col+1];
+      Cvalue3 += shared_A[thread_row+1][e] * shared_B[e][thread_col+1];*/
   // Synchronize to ensure all Cvalues have been incremented
   // before reading in the next shared_A AND shared_B BLOCKS
   }
@@ -125,8 +140,12 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
 }
 // Write Csub to GLOBAL memory.
 // Each thread writes its own cell value.
-Csub[thread_row * C.stride + thread_col] = Cvalue;
+Csub[mat_x * C.stride + mat_y] = Cvalue;
+Csub[(mat_x+8) * C.stride + (mat_y+8)] = Cvalue1;
+Csub[(mat_x+16) * C.stride + (mat_y+16)] = Cvalue2;
+Csub[(mat_x+24) * C.stride + (mat_y+24)] = Cvalue3;
+/*Csub[thread_row * C.stride + thread_col] = Cvalue;
 Csub[thread_row * C.stride + thread_col+1] = Cvalue1;
 Csub[(thread_row+1) * C.stride + thread_col] = Cvalue2;
-Csub[(thread_row+1) * C.stride + thread_col+1] = Cvalue3;
+Csub[(thread_row+1) * C.stride + thread_col+1] = Cvalue3;*/
 }
