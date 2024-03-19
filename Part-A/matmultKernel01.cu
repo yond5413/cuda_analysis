@@ -53,8 +53,8 @@ int thread_col = threadIdx.x;
 int block_row = blockIdx.y;
 int block_col = blockIdx.x;
 
-int foo = thread_row/32;///?
-int foo = thread_row%32;
+int foo = thread_row/32; ///?
+int foo1 = thread_row%32;
 // Each THREAD BLOCK computes one sub matrix Csub of C
 // EACH THREAD creates its own matrix descriptor Csub
 Csub = &C.elements[C.stride * FOOTPRINT_SIZE * block_row  + FOOTPRINT_SIZE * block_col ];//&C.elements[C.stride * BLOCK_SIZE * block_row  + BLOCK_SIZE * block_col ];
