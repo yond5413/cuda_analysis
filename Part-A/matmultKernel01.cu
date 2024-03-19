@@ -6,7 +6,7 @@ Modified by Yonathan Daniel
 
 #include "matmultKernel.h"
 
-//#define FOOTPRINT_SIZE BLOCK_SIZE
+#define FOOTPRINT_SIZE BLOCK_SIZE
 // Define a gpu kernel to perform matrix multiplication
 // of A x B = C.
 
@@ -70,10 +70,13 @@ for (int m = 0;  m < (A.width / (BLOCK_SIZE)); ++m){
   // Each thread copies just one element of shared_A and one element of shared_B
   shared_A[thread_row][thread_col] = Asub[thread_row * A.stride + thread_col];
   shared_B[thread_row][thread_col] = Bsub[thread_row * B.stride + thread_col];
+  
   shared_A[thread_row][thread_col+1] = Asub[thread_row * A.stride + thread_col+1];
   shared_B[thread_row][thread_col+1] = Bsub[thread_row * B.stride + thread_col+1];
+  
   shared_A[thread_row+1][thread_col] = Asub[(thread_row+1) * A.stride + thread_col];
   shared_B[thread_row+1][thread_col] = Bsub[(thread_row+1) * B.stride + thread_col];
+  
   shared_A[thread_row+1][thread_col+1] = Asub[(thread_row+1) * A.stride + thread_col+1];
   shared_B[thread_row+1][thread_col+1] = Bsub[(thread_row+1) * B.stride + thread_col+1];
   // Synchronize to ensure all elements are read
