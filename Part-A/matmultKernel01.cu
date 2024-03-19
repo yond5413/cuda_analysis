@@ -84,8 +84,18 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
   __shared__ float shared_B[FOOTPRINT_SIZE ][FOOTPRINT_SIZE ];
 
   // Each thread copies just one element of shared_A and one element of shared_B
-  //shared_A[thread_row][thread_col]
-  ///*
+  shared_A[thread_row][thread_col] = A_sub[thread_row*A.stride+thread_col];
+  shared_B[thread_row][thread_col] = B_sub[thread_row*B.stride+thread_col];
+  
+  shared_A[thread_row+16][thread_col] = A_sub[(thread_row+16)*A.stride+thread_col];
+  shared_B[thread_row+16][thread_col] = B_sub[(thread_row+16)*B.stride+thread_col];
+
+  shared_A[thread_row][thread_col+16] = A_sub[(thread_row)*A.stride+thread_col+16];
+  shared_B[thread_row][thread_col+16] = B_sub[(thread_row+)*B.stride+thread_col+16];
+
+  shared_A[thread_row+16][thread_col+16] = A_sub[(thread_row+16)*A.stride+thread_col+16];
+  shared_B[thread_row+16][thread_col+16] = B_sub[(thread_row+16)*B.stride+thread_col+16];
+  /*
   shared_A[thread_row][thread_col] = Asub[thread_row * A.stride + thread_col];
   shared_B[thread_row][thread_col] = Bsub[thread_row * B.stride + thread_col];
   
@@ -96,14 +106,14 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
   shared_B[thread_row+1][thread_col] = Bsub[(thread_row+1) * B.stride + thread_col];
   
   shared_A[thread_row+1][thread_col+1] = Asub[(thread_row+1) * A.stride + thread_col+1];
-  shared_B[thread_row+1][thread_col+1] = Bsub[(thread_row+1) * B.stride + thread_col+1];//*/
+  shared_B[thread_row+1][thread_col+1] = Bsub[(thread_row+1) * B.stride + thread_col+1];*/
   // Synchronize to ensure all elements are read
   __syncthreads();
 
   // Do an inproduct of one row of shared_A and one col of shared_B
   // computing one Cvalue by accumulation
 #pragma unroll  
-  for(int e=0; e<BLOCK_SIZE; ++e){
+  for(int e=0; e<FOOTPRINT_SIZE; ++e){
       Cvalue += shared_A[thread_row][e] * shared_B[e][thread_col];
       Cvalue1 += shared_A[thread_row][e] * shared_B[e][thread_col+1];
       Cvalue2 += shared_A[thread_row+1][e] * shared_B[e][thread_col];
