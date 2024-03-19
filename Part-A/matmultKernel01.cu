@@ -42,7 +42,7 @@ int block_col = blockIdx.x;
 
 // Each THREAD BLOCK computes one sub matrix Csub of C
 // EACH THREAD creates its own matrix descriptor Csub
-Csub = &C.elements[C.stride * BLOCK_SIZE *2 * block_row  + BLOCK_SIZE * block_col ];
+Csub = &C.elements[C.stride * BLOCK_SIZE * block_row  + BLOCK_SIZE * block_col ];
 
 // Each thread computes one element of Csub in its copy of CValue
 float Cvalue,Cvalue1,Cvalue2,Cvalue3;
