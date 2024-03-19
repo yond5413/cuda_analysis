@@ -142,7 +142,7 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
 }
 // Write Csub to GLOBAL memory.
 // Each thread writes its own cell value.
-/*int mat_x,mat_y;
+int mat_x,mat_y;
   if (thread_row%2 ==0){
     int mat_x = thread_row/2;
     int mat_y = thread_col;
@@ -150,7 +150,7 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
   else{
     int mat_x = (int)(thread_row/2);
     int mat_y = thread_col +16;
-  }*/
+  }
 Csub[mat_x * C.stride + mat_y] = Cvalue;
 Csub[(mat_x+8) * C.stride + (mat_y)] = Cvalue1;
 Csub[(mat_x+16) * C.stride + (mat_y)] = Cvalue2;
