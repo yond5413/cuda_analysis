@@ -125,9 +125,9 @@ for (int m = 0;  m < (A.width /(FOOTPRINT_SIZE));++m) {// (BLOCK_SIZE)); ++m){
   #pragma unroll  
   for(int e=0; e<FOOTPRINT_SIZE; ++e){
     Cvalue += shared_A[mat_x][e] * shared_B[e][mat_y];
-    Cvalue1 += shared_A[mat_x+8][e] * shared_B[e][mat_y+8];
-    Cvalue2 += shared_A[mat_x+16][e] * shared_B[e][mat_y+16];
-    Cvalue3 += shared_A[mat_x+24][e] * shared_B[e][mat_y+24];
+    Cvalue1 += shared_A[mat_x+8][e] * shared_B[e][mat_y];
+    Cvalue2 += shared_A[mat_x+16][e] * shared_B[e][mat_y];
+    Cvalue3 += shared_A[mat_x+24][e] * shared_B[e][mat_y];
     
     /*
       Cvalue += shared_A[thread_row][e] * shared_B[e][thread_col];
@@ -151,9 +151,9 @@ int mat_x,mat_y;
     int mat_y = thread_col +16;
   }
 Csub[mat_x * C.stride + mat_y] = Cvalue;
-Csub[(mat_x+8) * C.stride + (mat_y+8)] = Cvalue1;
-Csub[(mat_x+16) * C.stride + (mat_y+16)] = Cvalue2;
-Csub[(mat_x+24) * C.stride + (mat_y+24)] = Cvalue3;
+Csub[(mat_x+8) * C.stride + (mat_y)] = Cvalue1;
+Csub[(mat_x+16) * C.stride + (mat_y)] = Cvalue2;
+Csub[(mat_x+24) * C.stride + (mat_y)] = Cvalue3;
 /*Csub[thread_row * C.stride + thread_col] = Cvalue;
 Csub[thread_row * C.stride + thread_col+1] = Cvalue1;
 Csub[(thread_row+1) * C.stride + thread_col] = Cvalue2;
