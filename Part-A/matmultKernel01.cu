@@ -30,11 +30,21 @@ __device__ Matrix getSubMatrix(Matrix A, int row, int col)
     return Asub;
 }
 ///// Helper end functions end/////
+/*
+within given block
+how to losf into shared mem?
 
+instead of having like a square/rectangular filter
+load element from subarray and compute that way
+
+A = | 1 | 2 |
+    | 3 | 4 |
+
+To compute C_sub
+->
+Main difference thread to compute offsets in block
+    */
 __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
-/// matrix 
-//printf("%d, %d", FOOTPRINT_SIZE, BLOCK_SIZE);
-
 float *Asub, *Bsub, *Csub;
 // Putting these into registers speeds access.
 int thread_row = threadIdx.y;
@@ -42,6 +52,8 @@ int thread_col = threadIdx.x;
 int block_row = blockIdx.y;
 int block_col = blockIdx.x;
 
+int foo = thread_row/32;///?
+int foo = thread_row%32;
 // Each THREAD BLOCK computes one sub matrix Csub of C
 // EACH THREAD creates its own matrix descriptor Csub
 Csub = &C.elements[C.stride * FOOTPRINT_SIZE * block_row  + FOOTPRINT_SIZE * block_col ];//&C.elements[C.stride * BLOCK_SIZE * block_row  + BLOCK_SIZE * block_col ];

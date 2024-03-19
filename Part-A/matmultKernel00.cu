@@ -20,7 +20,7 @@
 // Define a gpu kernel to perform matrix multiplication
 // of A x B = C.
 __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
-
+  printf("block_size: %d,foot: %d \n"BLOCK_SIZE,FOOTPRINT_SIZE);
   // matrix blocks
   float *Asub, *Bsub, *Csub;
   // Putting these into registers speeds access.
