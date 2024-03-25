@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
     initialize_timer();
     start_timer();
 
-    AddVectors<<<dimGrid, dimBlock>>>(d_A, d_B, d_C, ValuesPerThread);
+    AddVectors<<<dimGrid, dimBlock>>>(h_A, h_B, h_C, ValuesPerThread);
     stop_timer();
     double time = elapsed_time();
 
