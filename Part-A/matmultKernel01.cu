@@ -139,8 +139,8 @@ __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C){
  }
  // Write Csub to GLOBAL memory.
  // Each thread writes its own cell value.
- Csub[thread_row * C.stride + thread_col  ] = Cvalue0;
- Csub[thread_row * C.stride + thread_col  + BLOCK_SIZE] = Cvalue1;
- Csub[thread_row * C.stride + thread_col  + BLOCK_SIZE*C.stride] = Cvalue2;
- Csub[thread_row * C.stride + thread_col  + BLOCK_SIZE*C.stride + BLOCK_SIZE] = Cvalue3;
+ Csub[thread_row * C.stride + thread_col  ] = Cval0;
+ Csub[thread_row * C.stride + thread_col  + BLOCK_SIZE] = Cval1;
+ Csub[thread_row * C.stride + thread_col  + BLOCK_SIZE*C.stride] = Cval2;
+ Csub[thread_row * C.stride + thread_col  + BLOCK_SIZE*C.stride + BLOCK_SIZE] = Cval3;
 }
