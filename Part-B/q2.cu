@@ -5,6 +5,8 @@
 #include <iostream>
 
 //
+___global__ void AddVectors(const float* A, const float* B, float* C, int N);
+
 ___global__ void AddVectors(const float* A, const float* B, float* C, int N)
 {
     int i = threadIdx.x + (blockIdx.x*blockDim.x);
