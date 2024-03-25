@@ -4,9 +4,7 @@
 #include "timer.h"
 #include <iostream>
 
-//
-
-___global__ void AddVectors(const float* A, const float* B, float* C, int N)
+__global__ void AddVectors(const float* A, const float* B, float* C, int N)
 {
     int i = threadIdx.x + (blockIdx.x*blockDim.x);
     int stride = blockDim.x*gridDim.x;
@@ -17,7 +15,7 @@ ___global__ void AddVectors(const float* A, const float* B, float* C, int N)
         i+=stride;
     }
 }
-//
+
 float* h_A; 
 float* h_B; 
 float* h_C;
