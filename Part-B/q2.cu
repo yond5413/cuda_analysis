@@ -4,7 +4,7 @@
 #include "timer.h"
 #include <iostream>
 
-#define blocksize 256
+#define blockSize 256
 __global__ void AddVectors(const float* A, const float* B, float* C, int N)
 {
     int i = threadIdx.x + (blockIdx.x*blockDim.x);
