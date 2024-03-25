@@ -15,10 +15,13 @@ __global__ void AddVectors(const float* A, const float* B, float* C, int N)
         i+=stride;
     }
 }
-
+float* d_A; 
+float* d_B; 
+float* d_C; 
 float* h_A; 
 float* h_B; 
 float* h_C;
+void Cleanup(bool);
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         printf("Usage: %s <scenario>\n", argv[0]);
@@ -84,12 +87,18 @@ int main(int argc, char* argv[]) {
      h_A[i] = 1//(float)i;
      h_B[i] = 1//(float)(N-i);   
     }
+     // Warm up
+     AddVectors<<<dimGrid, dimBlock>>>(d_A, d_B, d_C, ValuesPerThread);
+     error = cudaGetLastError();
+     if (error != cudaSuccess) Cleanup(false);
+     cudaDeviceSynchronize();
+ 
     // Initialize timer
   
     initialize_timer();
     start_timer();
 
-    AddVectors<<<dimGrid, dimBlock>>>(h_A, h_B, h_C, ValuesPerThread);
+    AddVectors<<<dimGrid, dimBlock>>>(h_A, h_B, h_C, N);
     stop_timer();
     double time = elapsed_time();
 
@@ -103,14 +112,6 @@ int main(int argc, char* argv[]) {
 
 void Cleanup(bool noError) {  // simplified version from CUDA SDK
     cudaError_t error;
-        
-    // Free device vectors
-    if (d_A)
-        cudaFree(d_A);
-    if (d_B)
-        cudaFree(d_B);
-    if (d_C)
-        cudaFree(d_C);
 
     // Free host memory
     if (h_A)
