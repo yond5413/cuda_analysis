@@ -85,11 +85,11 @@ int main(int argc, char* argv[]) {
     // Initialize host vectors h_A and h_B
     int i;
     for(i=0; i<N; ++i){
-     h_A[i] = 1//(float)i;
-     h_B[i] = 1//(float)(N-i);   
+     h_A[i] = 1;//(float)i;
+     h_B[i] = 1;//(float)(N-i);   
     }
      // Warm up
-     AddVectors<<<dimGrid, dimBlock>>>(d_A, d_B, d_C, ValuesPerThread);
+     AddVectors<<<dimGrid, dimBlock>>>(d_A, d_B, d_C, N);
      error = cudaGetLastError();
      if (error != cudaSuccess) Cleanup(false);
      cudaDeviceSynchronize();
@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
              time);
     //printf( "Time: %lf (sec), GFlopsS: %lf, GBytesS: %lf\n", 
     //         time, nGFlopsPerSec, nGBytesPerSec);
-    Cleanup(True);
+    Cleanup(true);
 }
 
 
