@@ -4,6 +4,9 @@ LIB       :=  -L$(SDK_INSTALL_PATH)/lib64 -L$(SDK_INSTALL_PATH)/samples/common/l
 #INCLUDES  :=  -I$(SDK_INSTALL_PATH)/include -I$(SDK_INSTALL_PATH)/samples/common/inc
 OPTIONS   :=  -O3 
 #######################################################################
+EXECS :=  q1 # q2 q3
+all:$(EXECS)
+#######################################################################
 clean:
 	rm -f $(EXECS) *.o
 #######################################################################
