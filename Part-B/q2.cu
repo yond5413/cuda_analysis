@@ -5,7 +5,6 @@
 #include <iostream>
 
 //
-___global__ void AddVectors(const float* A, const float* B, float* C, int N);
 
 ___global__ void AddVectors(const float* A, const float* B, float* C, int N)
 {
@@ -19,7 +18,9 @@ ___global__ void AddVectors(const float* A, const float* B, float* C, int N)
     }
 }
 //
-
+float* h_A; 
+float* h_B; 
+float* h_C;
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         printf("Usage: %s <scenario>\n", argv[0]);
@@ -86,7 +87,6 @@ int main(int argc, char* argv[]) {
      h_B[i] = 1//(float)(N-i);   
     }
     // Initialize timer
-    
   
     initialize_timer();
     start_timer();
