@@ -86,8 +86,8 @@ int main(int argc, char* argv[]) {
     }
      // Warm up
      AddVectors<<<dimGrid, dimBlock>>>(d_A, d_B, d_C, N);
-     error = cudaGetLastError();
-     if (error != cudaSuccess) Cleanup(false);
+    // error = cudaGetLastError();
+     //if (error != cudaSuccess) Cleanup(false);
      cudaDeviceSynchronize();
  
     // Initialize timer
