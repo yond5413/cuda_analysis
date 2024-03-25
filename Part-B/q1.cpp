@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <cstdlib> 
+#include <cstring> 
 #include "timer.h"
 
 // Function to add elements of two arrays
@@ -39,7 +41,7 @@ int main(int argc, char* argv[]) {
     stop_timer();
     double duration = elapsed_time();
     
-   printf("Time taken for adding arrays with K = %d million elements: %lld seconds\n", K, (long long)duration.count());
+   printf("Time taken for adding arrays with K = %d million elements: %lld seconds\n", K, duration);
 
 
     // Free memory
