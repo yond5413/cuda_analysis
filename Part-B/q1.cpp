@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     stop_timer();
     double duration = elapsed_time();
     
-   printf("Time taken for adding arrays with K = %d million elements: %lld seconds\n", K, duration);
+   printf("Time taken for adding arrays with K = %d million elements: %lf seconds\n", K, duration);
 
 
     // Free memory
