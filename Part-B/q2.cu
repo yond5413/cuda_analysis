@@ -4,6 +4,7 @@
 #include "timer.h"
 #include <iostream>
 
+#define blocksize 256
 __global__ void AddVectors(const float* A, const float* B, float* C, int N)
 {
     int i = threadIdx.x + (blockIdx.x*blockDim.x);
@@ -41,8 +42,8 @@ int main(int argc, char* argv[]) {
          printf("Invalid size. Size must be a positive integer.\n");
          return 1;
      }
-     million = 1000000;
-     N = sizeInMillions*million; //ValuesPerThread * GridWidth * BlockWidth;
+     int million = 1000000;
+     int N = sizeInMillions*million; //ValuesPerThread * GridWidth * BlockWidth;
      printf("Total vector size: %d\n", N); 
      // size_t is the total number of bytes for a vector.
      size_t size = N * sizeof(float);
