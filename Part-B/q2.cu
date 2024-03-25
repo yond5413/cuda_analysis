@@ -24,7 +24,7 @@ float* h_B;
 float* h_C;
 void Cleanup(bool);
 int main(int argc, char* argv[]) {
-    if (argc != 2) {
+    if (argc != 3) {
         printf("Usage: %s <scenario>\n", argv[0]);
         printf("Available scenarios:\n");
         printf("1 - One block with 1 thread\n");
