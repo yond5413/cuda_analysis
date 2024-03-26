@@ -33,13 +33,13 @@ int main(int argc, char* argv[]) {
         return 1;
      }
      int scenario = atoi(argv[1]);
-     printf("hello");
+     printf("hello \n");
      if (scenario < 1 || scenario > 3) {
          printf("Invalid scenario number. Please choose a scenario between 1 and 3.\n");
          return 1;
      }
      int sizeInMillions = atoi(argv[2]);
-     printf("millions");
+     printf("millions %d \n"sizeInMillions);
      if (sizeInMillions <= 0) {
          printf("Invalid size. Size must be a positive integer.\n");
          return 1;
