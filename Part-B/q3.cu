@@ -75,8 +75,8 @@ int main(int argc, char* argv[]) {
     // Initialize host vectors h_A and h_B
     int i;
     for(i=0; i<N; ++i){
-     h_A[i] = 1;//(float)i;
-     h_B[i] = 1;//(float)(N-i);   
+     a[i] = 1;//(float)i;
+     b[i] = 1;//(float)(N-i);   
     }
     printf("before the warm-up"); 
     // Warm up
