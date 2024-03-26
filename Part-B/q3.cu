@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
          return 1;
      }
      int sizeInMillions = atoi(argv[2]);
-     printf("millions %d \n"sizeInMillions);
+     printf("millions %d \n",sizeInMillions);
      if (sizeInMillions <= 0) {
          printf("Invalid size. Size must be a positive integer.\n");
          return 1;
