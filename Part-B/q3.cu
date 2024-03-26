@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
      a[i] = 1;//(float)i;
      b[i] = 1;//(float)(N-i);   
     }
-    printf("before the warm-up"); 
+    printf("before the warm-up\n"); 
     // Warm up
      AddVectors<<<dimGrid, dimBlock>>>(a, b, c, N);
     // error = cudaGetLastError();
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
      cudaDeviceSynchronize();
  
     // Initialize timer
-    printf("welcome pre timer");
+    printf("welcome pre timer\n");
     initialize_timer();
     start_timer();
 
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
     stop_timer();
     double time = elapsed_time();
 
-    printf( "Time: %lf (sec),", 
+    printf( "Time: %lf (sec), \n", 
              time);
     //printf( "Time: %lf (sec), GFlopsS: %lf, GBytesS: %lf\n", 
     //         time, nGFlopsPerSec, nGBytesPerSec);
