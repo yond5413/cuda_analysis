@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
     }
     printf("before the warm-up"); 
     // Warm up
-     AddVectors<<<dimGrid, dimBlock>>>(d_A, d_B, d_C, N);
+     AddVectors<<<dimGrid, dimBlock>>>(a, b, c, N);
     // error = cudaGetLastError();
      //if (error != cudaSuccess) Cleanup(false);
      cudaDeviceSynchronize();
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
     initialize_timer();
     start_timer();
 
-    AddVectors<<<dimGrid, dimBlock>>>(h_A, h_B, h_C, N);
+    AddVectors<<<dimGrid, dimBlock>>>(a, b, c, N);
     stop_timer();
     double time = elapsed_time();
 
@@ -99,5 +99,7 @@ int main(int argc, char* argv[]) {
     //printf( "Time: %lf (sec), GFlopsS: %lf, GBytesS: %lf\n", 
     //         time, nGFlopsPerSec, nGBytesPerSec);
     
-
-
+    cudaFree(a);
+    cudaFree(b);
+    cudaFree(c);
+}
