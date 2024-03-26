@@ -16,12 +16,7 @@ __global__ void AddVectors(const float* A, const float* B, float* C, int N)
         i+=stride;
     }
 }
-float* d_A; 
-float* d_B; 
-float* d_C; 
-float* h_A; 
-float* h_B; 
-float* h_C;
+
 void Cleanup(bool);
 int main(int argc, char* argv[]) {
     if (argc != 3) {
@@ -70,17 +65,13 @@ int main(int argc, char* argv[]) {
      }
      printf(" are done\n");
      // Allocate input vectors h_A and h_B in host memory
-     /*h_A = (float*)malloc(size);
-     if (h_A == 0) Cleanup(false);
-     h_B = (float*)malloc(size);
-     if (h_B == 0) Cleanup(false);
-     h_C = (float*)malloc(size);
-     if (h_C == 0) Cleanup(false);*/
+    float *a,*b,*c; 
      printf("before cudaMalloc"); 
+    
     // Allocate vectors in device memory.
-     cudaMallocManaged(&h_A, size);
-     cudaMallocManaged(&h_B, size);
-     cudaMallocManaged(&h_C, size);
+     cudaMallocManaged(&a, size);
+     cudaMallocManaged(&b, size);
+     cudaMallocManaged(&c, size);
     // Initialize host vectors h_A and h_B
     int i;
     for(i=0; i<N; ++i){
@@ -107,32 +98,6 @@ int main(int argc, char* argv[]) {
              time);
     //printf( "Time: %lf (sec), GFlopsS: %lf, GBytesS: %lf\n", 
     //         time, nGFlopsPerSec, nGBytesPerSec);
-    Cleanup(true);
-}
-
-
-void Cleanup(bool noError) {  // simplified version from CUDA SDK
-    cudaError_t error;
-
-    // Free host memory
-    if (h_A)
-        free(h_A);
-    if (h_B)
-        free(h_B);
-    if (h_C)
-        free(h_C);
-        
-    error = cudaDeviceReset();
     
-    if (!noError || error != cudaSuccess)
-        printf("cuda malloc or cuda thread exit failed \n");
-    
-    fflush( stdout);
-    fflush( stderr);
 
-    exit(0);
-}
 
-/*
-forgot to do cuda freee?
-*/
