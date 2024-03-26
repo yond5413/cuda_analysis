@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
         return 1;
      }
      int scenario = atoi(argv[1]);
-     printf('hello');
+     printf("hello");
      if (scenario < 1 || scenario > 3) {
          printf("Invalid scenario number. Please choose a scenario between 1 and 3.\n");
          return 1;
