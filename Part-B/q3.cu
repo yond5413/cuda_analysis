@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
      cudaDeviceSynchronize();
  
     // Initialize timer
-  
+    printf("welcome pre timer");
     initialize_timer();
     start_timer();
 
@@ -128,3 +128,7 @@ void Cleanup(bool noError) {  // simplified version from CUDA SDK
 
     exit(0);
 }
+
+/*
+forgot to do cuda freee?
+*/
