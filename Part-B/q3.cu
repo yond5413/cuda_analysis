@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
      if (h_B == 0) Cleanup(false);
      h_C = (float*)malloc(size);
      if (h_C == 0) Cleanup(false);*/
- 
+     printf("before cudaMalloc"); 
     // Allocate vectors in device memory.
      cudaMallocManaged(&h_A, N * sizeof(float));
      cudaMallocManaged(&h_B, N * sizeof(float));
