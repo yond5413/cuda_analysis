@@ -84,7 +84,8 @@ int main(int argc, char* argv[]) {
      h_A[i] = 1;//(float)i;
      h_B[i] = 1;//(float)(N-i);   
     }
-     // Warm up
+    printf("before the warm-up"); 
+    // Warm up
      AddVectors<<<dimGrid, dimBlock>>>(d_A, d_B, d_C, N);
     // error = cudaGetLastError();
      //if (error != cudaSuccess) Cleanup(false);

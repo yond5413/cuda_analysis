@@ -55,10 +55,6 @@ int thread_col = threadIdx.x;
 int block_row = blockIdx.y;
 int block_col = blockIdx.x;
 
-//this is where they go into memory
-//int footprint_row = block_row*2;
-//int footprint_col = block_col*2;
-
 //4 different C values
 float Cvalue0 = 0;
 float Cvalue1 = 0;
