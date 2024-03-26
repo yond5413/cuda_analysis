@@ -56,6 +56,7 @@ int main(int argc, char* argv[]) {
      //dim3 dimGrid/;/(1);                    
      //dim3 dimBlock;//(1);                 
      // Set up execution configuration
+     printf("config");
      dim3 dimBlock, dimGrid;
      if (scenario == 1) {
          dimGrid = dim3(1); // One block
@@ -67,7 +68,7 @@ int main(int argc, char* argv[]) {
          dimGrid = dim3((size + blockSize - 1) / blockSize); // Adjust number of blocks based on size
          dimBlock = dim3(blockSize); // 256 threads per block
      }
-     
+     printf(" are done\n");
      // Allocate input vectors h_A and h_B in host memory
      /*h_A = (float*)malloc(size);
      if (h_A == 0) Cleanup(false);
@@ -77,9 +78,9 @@ int main(int argc, char* argv[]) {
      if (h_C == 0) Cleanup(false);*/
      printf("before cudaMalloc"); 
     // Allocate vectors in device memory.
-     cudaMallocManaged(&h_A, N * sizeof(float));
-     cudaMallocManaged(&h_B, N * sizeof(float));
-     cudaMallocManaged(&h_C, N * sizeof(float));
+     cudaMallocManaged(&h_A, size);
+     cudaMallocManaged(&h_B, size);
+     cudaMallocManaged(&h_C, size);
     // Initialize host vectors h_A and h_B
     int i;
     for(i=0; i<N; ++i){
