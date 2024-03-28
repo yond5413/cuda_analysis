@@ -39,7 +39,7 @@ double *d_Io,*h_Io;
 __global__ void convolution(double *I,double *F, double *O){
     /// 
     //double *Isub, *Fsub, *Osub;
-    __shared__ double temp[BLOCK_SIZE + FILTER_SIZE - 1][BLOCK_SIZE + FILTER_SIZE - 1];
+    __shared__ double temp[BLOCK_SIZE + FW - 1][BLOCK_SIZE + FH - 1];
 
     int row_idx = blockIdx.y * blockDim.y + threadIdx.y; // Global row index
     int col_idx = blockIdx.x * blockDim.x + threadIdx.x; // Global column index
