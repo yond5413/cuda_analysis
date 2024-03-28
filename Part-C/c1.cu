@@ -65,11 +65,12 @@ int main(int argc, char* argv[]){
     size_t size_Io =  (H+2*P)*(W+2*P)*C;
     size_t size_F = FH*FW*C*K;
     size_t size_O = K*H*W;
-
+    printf("Malloc \n");
     h_I = (double*)malloc(size_I);
     h_F = (double*)malloc(size_F);
     h_O = (double*)malloc(size_O);
     h_Io = (double*)malloc(size_Io);
+    printf("init?\n");
     // init I tensor
     for(int c = 0;c<C;c++){
         for(int i = 0;i<H;++i){
