@@ -95,8 +95,8 @@ int main(int argc, char* argv[]){
     cudaMalloc(&d_O,size_O*sizeof(double));
     cudaMalloc(&d_Io,size_Io*sizeof(double));
 
-    cudaMemcpy(d_Io,h_Io,cudaMemcpyHostToDevice);
-    cudaMemcpy(d_F,h_F,cudaMemcpyHostToDevice);
+    cudaMemcpy(d_Io,h_Io,size_Io * sizeof(double),cudaMemcpyHostToDevice);
+    cudaMemcpy(d_F,h_F,size_F * sizeof(double),cudaMemcpyHostToDevice);
 
     dim3 dimBlock(H); //1024
     dim3 dimGrid(K,H); //64,1024
