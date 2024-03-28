@@ -90,7 +90,7 @@ int main(int argc, char* argv[]){
             }
         }
     }
-   
+   printf("cuddda \n");
     cudaMalloc(&d_I,size_I*sizeof(double));
     cudaMalloc(&d_F,size_F*sizeof(double));
     cudaMalloc(&d_O,size_O*sizeof(double));
