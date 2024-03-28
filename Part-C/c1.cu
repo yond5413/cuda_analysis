@@ -12,10 +12,10 @@
 #define FH 3
 #define K 64 //output channels
 #define P 1 //padding 
-float *d_I,*d_F,*d_O, *h_I,*h_F,*h_O;
-float *d_Io,*h_Io;
+double *d_I,*d_F,*d_O, *h_I,*h_F,*h_O;
+double *d_Io,*h_Io;
 
-__global__ convolution(double *I,double *F, double *O){
+__global__ void convolution(double *I,double *F, double *O){
     int row_idx = blockIdx.y * blockDim.y + threadIdx.y; // Global row index
     int col_idx = blockIdx.x * blockDim.x + threadIdx.x; // Global column index
     int c_out_idx = blockIdx.z; // Output channel index
@@ -64,14 +64,15 @@ int main(int argc, char* argv[]){
     size_t size_I = H*W*C;
     size_t size_Io =  (H+2*P)*(W+2*P)*C;
     size_t size_F = FH*FW*C*K;
-    size_t size_O = K*H*W
+    size_t size_O = K*H*W;
 
     h_I = (double*)malloc(size_I);
     h_F = (double*)malloc(size_F);
     h_O = (double*)malloc(size_O);
+    h_Io = (double*)malloc(size_Io);
     // init I tensor
     for(int c = 0;c<C;c++){
-        for(int i = 0;0i<H;++i){
+        for(int i = 0;i<H;++i){
             for(int j = 0;j<W;++j){
                 h_I[c*H*W +i*W+j] = c*(i+j);
             }
@@ -92,19 +93,20 @@ int main(int argc, char* argv[]){
     cudaMalloc(&d_I,size_I*sizeof(double));
     cudaMalloc(&d_F,size_F*sizeof(double));
     cudaMalloc(&d_O,size_O*sizeof(double));
-    
-    cudaMemcpy(d_I,h_I,cudaMemcpyHostToDevice);
+    cudaMalloc(&d_Io,size_Io*sizeof(double));
+
+    cudaMemcpy(d_Io,h_Io,cudaMemcpyHostToDevice);
     cudaMemcpy(d_F,h_F,cudaMemcpyHostToDevice);
 
     dim3 dimBlock(H); //1024
     dim3 dimGrid(K,H); //64,1024
     // warm-up
-    convolution<<<dimGrid, dimBlock>>>(device_A, device_B, device_C);
+    convolution<<<dimGrid, dimBlock>>>(d_Io, d_F, d_O);
     cudaDeviceSynchronize();
     //
     initialize_timer();
     start_timer();
-    convolution<<<dimGrid, dimBlock>>>(device_A, device_B, device_C);
+    convolution<<<dimGrid, dimBlock>>>(d_Io, d_F, d_O);
     cudaDeviceSynchronize();
     stop_timer();
     double time = elapsed_time();
