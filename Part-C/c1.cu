@@ -96,7 +96,7 @@ int main(int argc, char* argv[]){
         for (int x = 0; x < W + 2 * P; ++x) {
             for (int y = 0; y < H + 2 * P; ++y) {
                 if (x == 0 || y == 0 || x == W + 2 * P - 1 || y == H + 2 * P - 1) {
-                    h_I0[c * (W + 2 * P) * (H + 2 * P) + x * (H + 2 * P) + y] = 0;
+                    h_Io[c * (W + 2 * P) * (H + 2 * P) + x * (H + 2 * P) + y] = 0;
                 } else {
                     h_Io[c * (W + 2 * P) * (H + 2 * P) + x * (H + 2 * P) + y] = I[c * W * H + (x - 1) * H + (y - 1)];
                 }
@@ -130,9 +130,9 @@ int main(int argc, char* argv[]){
 
     //printf( "Time: %lf (sec), nFlops: %0.0lf, GFlopsS: %lf\n",
     //time, nFlops, nGFlopsPerSec);
-    cudaFree(d_I.elements);
-    cudaFree(d_Io.elements);
-    cudaFree(d_F.elements);
-    cudaFree(d_O.elements);
+    cudaFree(d_I);
+    cudaFree(d_Io);
+    cudaFree(d_F);
+    cudaFree(d_O);
     return 0;
 }
