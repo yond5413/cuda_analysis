@@ -37,11 +37,6 @@ double *d_Io,*h_Io;
 }
 */
 __global__ void convolution(double *I,double *F, double *O){
-    int row_idx = blockIdx.y * blockDim.y + threadIdx.y; // Global row index
-    int col_idx = blockIdx.x * blockDim.x + threadIdx.x; // Global column index
-    int c_out_idx = blockIdx.z; // Output channel index
-    ////
-    double O_value = 0.0;
     /// 
     //double *Isub, *Fsub, *Osub;
     __shared__ double temp[BLOCK_SIZE + FILTER_SIZE - 1][BLOCK_SIZE + FILTER_SIZE - 1];
