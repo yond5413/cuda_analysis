@@ -98,7 +98,7 @@ int main(int argc, char* argv[]){
                 if (x == 0 || y == 0 || x == W + 2 * P - 1 || y == H + 2 * P - 1) {
                     h_Io[c * (W + 2 * P) * (H + 2 * P) + x * (H + 2 * P) + y] = 0;
                 } else {
-                    h_Io[c * (W + 2 * P) * (H + 2 * P) + x * (H + 2 * P) + y] = I[c * W * H + (x - 1) * H + (y - 1)];
+                    h_Io[c * (W + 2 * P) * (H + 2 * P) + x * (H + 2 * P) + y] = h_I[c * W * H + (x - 1) * H + (y - 1)];
                 }
             }
         }
