@@ -101,9 +101,11 @@ int main(int argc, char* argv[]){
     dim3 dimBlock(H); //1024
     dim3 dimGrid(K,H); //64,1024
     // warm-up
+    printf("HIIII \n");
     convolution<<<dimGrid, dimBlock>>>(d_Io, d_F, d_O);
     cudaDeviceSynchronize();
     //
+    printf("warmupppp done");
     initialize_timer();
     start_timer();
     convolution<<<dimGrid, dimBlock>>>(d_Io, d_F, d_O);
