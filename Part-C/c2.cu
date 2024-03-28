@@ -12,26 +12,99 @@
 #define FH 3
 #define K 64 //output channels
 #define P 1 //padding 
+#define BLOCK_SIZE 16
 double *d_I,*d_F,*d_O, *h_I,*h_F,*h_O;
 double *d_Io,*h_Io;
+/*
+ double O_value = 0.0;
 
+    // Perform convolution for each pixel
+    for (int i = 0; i < FH; ++i) {
+        for (int j = 0; j < FW; ++j) {
+            for (int c = 0; c < C; ++c) {
+                int row_offset = row_idx - P + i;
+                int col_offset = col_idx - P + j;
+
+                // Check if the pixel is within the input image boundaries
+                if (row_offset >= 0 && row_offset < H && col_offset >= 0 && col_offset < W) {
+                    O_value += I[c * (H * W) + row_offset * W + col_offset] * F[c_out_idx * (C * FH * FW) + c * (FH * FW) + i * FW + j];
+                }
+            }
+        }
+    }
+    // Store the result in the output tensor
+    O[c_out_idx * (H * W) + row_idx * W + col_idx] = O_value;
+}
+*/
 __global__ void convolution(double *I,double *F, double *O){
+    int row_idx = blockIdx.y * blockDim.y + threadIdx.y; // Global row index
+    int col_idx = blockIdx.x * blockDim.x + threadIdx.x; // Global column index
+    int c_out_idx = blockIdx.z; // Output channel index
+    ////
+    double O_value = 0.0;
+    /// 
+    //double *Isub, *Fsub, *Osub;
+    __shared__ double temp[BLOCK_SIZE + FILTER_SIZE - 1][BLOCK_SIZE + FILTER_SIZE - 1];
 
+    int row_idx = blockIdx.y * blockDim.y + threadIdx.y; // Global row index
+    int col_idx = blockIdx.x * blockDim.x + threadIdx.x; // Global column index
+    int c_out_idx = blockIdx.z;                          // Output channel index
+
+    double O_value = 0.0;
+
+    // Load data into shared memory with padding
+    int temp_row = threadIdx.y;
+    int temp_col = threadIdx.x;
+    int global_row = blockIdx.y * blockDim.y + temp_row;
+    int global_col = blockIdx.x * blockDim.x + temp_col;
+
+    if (global_row < H && global_col < W) {
+        temp[temp_row][temp_col] = I[c_out_idx * (H * W) + global_row * W + global_col];
+    } else {
+        temp[temp_row][temp_col] = 0.0; // Zero-padding for out-of-bounds elements
+    }
+
+    __syncthreads();
+
+    // Perform convolution for each pixel
+    for (int i = 0; i < FH; ++i) {
+        for (int j = 0; j < FW; ++j) {
+            int conv_row = temp_row + i;
+            int conv_col = temp_col + j;
+            O_value += temp[conv_row][conv_col] * F[c_out_idx * (C * FH * FW) + i * FW + j];
+        }
+    }
+
+    // Store the result in the output tensor
+    if (row_idx < H && col_idx < W) {
+        O[c_out_idx * (H * W) + row_idx * W + col_idx] = O_value;
+    }
+    
 }
 
-
+double checksum(double* O) {
+    double checksum = 0.0;
+    for (int k = 0; k < K; ++k) {
+        for (int x = 0; x < W; ++x) {
+            for (int y = 0; y < H; ++y) {
+                checksum += O[k * W * H + x * H + y];
+            }
+        }
+    }
+    return checksum;
+}
 int main(int argc, char* argv[]){
     
     size_t size_I = H*W*C;
     size_t size_Io =  (H+2*P)*(W+2*P)*C;
     size_t size_F = FH*FW*C*K;
     size_t size_O = K*H*W;
-    printf("Malloc \n");
+   // printf("Malloc \n");
     h_I = (double*)malloc(size_I*sizeof(double));
     h_F = (double*)malloc(size_F*sizeof(double));
     h_O = (double*)malloc(size_O*sizeof(double));
     h_Io = (double*)malloc(size_Io*sizeof(double));
-    printf("init?\n");
+    //printf("init?\n");
     // init I tensor
     // Initialize I
     for (int c = 0; c < C; ++c) {
@@ -41,7 +114,7 @@ int main(int argc, char* argv[]){
             }
         }
     }
-    printf("init->F\n");
+    //printf("init->F\n");
     // Initialize F filter
     for (int k = 0; k < K; ++k) {
         for (int c = 0; c < C; ++c) {
@@ -52,7 +125,7 @@ int main(int argc, char* argv[]){
             }
         }
     }
-    printf("init->Io\n");
+    //printf("init->Io\n");
     // Initialize I0 with padding
     for (int c = 0; c < C; ++c) {
         for (int x = 0; x < W + 2 * P; ++x) {
@@ -65,7 +138,7 @@ int main(int argc, char* argv[]){
             }
         }
     }
-   printf("cuddda \n");
+   //printf("cuddda \n");
     cudaMalloc(&d_I,size_I*sizeof(double));
     cudaMalloc(&d_F,size_F*sizeof(double));
     cudaMalloc(&d_O,size_O*sizeof(double));
@@ -77,11 +150,11 @@ int main(int argc, char* argv[]){
     dim3 dimBlock(H); //1024
     dim3 dimGrid(K,H); //64,1024
     // warm-up
-    printf("HIIII \n");
+    //printf("HIIII \n");
     convolution<<<dimGrid, dimBlock>>>(d_Io, d_F, d_O);
     cudaDeviceSynchronize();
     //
-    printf("warmupppp done");
+    //printf("warmupppp done");
     initialize_timer();
     start_timer();
     convolution<<<dimGrid, dimBlock>>>(d_Io, d_F, d_O);

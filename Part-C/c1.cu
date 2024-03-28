@@ -58,12 +58,12 @@ int main(int argc, char* argv[]){
     size_t size_Io =  (H+2*P)*(W+2*P)*C;
     size_t size_F = FH*FW*C*K;
     size_t size_O = K*H*W;
-    printf("Malloc \n");
+    //printf("Malloc \n");
     h_I = (double*)malloc(size_I*sizeof(double));
     h_F = (double*)malloc(size_F*sizeof(double));
     h_O = (double*)malloc(size_O*sizeof(double));
     h_Io = (double*)malloc(size_Io*sizeof(double));
-    printf("init?\n");
+    //printf("init?\n");
     // init I tensor
     // Initialize I
     for (int c = 0; c < C; ++c) {
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]){
             }
         }
     }
-    printf("init->F\n");
+    //printf("init->F\n");
     // Initialize F filter
     for (int k = 0; k < K; ++k) {
         for (int c = 0; c < C; ++c) {
@@ -84,7 +84,7 @@ int main(int argc, char* argv[]){
             }
         }
     }
-    printf("init->Io\n");
+    //printf("init->Io\n");
     // Initialize I0 with padding
     for (int c = 0; c < C; ++c) {
         for (int x = 0; x < W + 2 * P; ++x) {
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]){
             }
         }
     }
-   printf("cuddda \n");
+   //printf("cuddda \n");
     cudaMalloc(&d_I,size_I*sizeof(double));
     cudaMalloc(&d_F,size_F*sizeof(double));
     cudaMalloc(&d_O,size_O*sizeof(double));
@@ -109,11 +109,11 @@ int main(int argc, char* argv[]){
     dim3 dimBlock(H); //1024
     dim3 dimGrid(K,H); //64,1024
     // warm-up
-    printf("HIIII \n");
+    //printf("HIIII \n");
     convolution<<<dimGrid, dimBlock>>>(d_Io, d_F, d_O);
     cudaDeviceSynchronize();
     //
-    printf("warmupppp done");
+    //printf("warmupppp done");
     initialize_timer();
     start_timer();
     convolution<<<dimGrid, dimBlock>>>(d_Io, d_F, d_O);
