@@ -4,7 +4,7 @@ LIB       :=  -L$(SDK_INSTALL_PATH)/lib64 -L$(SDK_INSTALL_PATH)/samples/common/l
 
 OPTIONS   :=  -O3 
 #######################################################################
-EXECS :=  q1  #q2 q3
+EXECS :=  c1  #q2 q3
 all:$(EXECS)
 #######################################################################
 clean:
