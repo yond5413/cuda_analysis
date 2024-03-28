@@ -40,24 +40,17 @@ __global__ void convolution(double *I,double *F, double *O){
     O[c_out_idx * (H * W) + row_idx * W + col_idx] = O_value;
 }
 
-/*
-void initIo(double *I, double *Io,int padding){
-    int paddedH = H + P*padding; //2 * padding;
-    int paddedW = W + P* padding;
-    for (int c = 0; c < C; ++c) {
-        for (int i = 0; i < paddedH; ++i) {
-            for (int j = 0; j < paddedW; ++j) {
-                if (i < padding || i >= paddedH - padding || j < padding || j >= paddedW - padding) {
-                    // Apply zero padding to the border regions
-                    Io[c * paddedH * paddedW + i * paddedW + j] = 0.0;
-                } else {
-                    // Copy values from the original tensor I to the padded tensor Io
-                    Io[c * paddedH * paddedW + i * paddedW + j] = I[c * H * W + (i - padding) * W + (j - padding)];
-                }
+double checksum(double* O) {
+    double checksum = 0.0;
+    for (int k = 0; k < K; ++k) {
+        for (int x = 0; x < W; ++x) {
+            for (int y = 0; y < H; ++y) {
+                checksum += O[k * W * H + x * H + y];
             }
         }
     }
-}*/
+    return checksum;
+}
 
 int main(int argc, char* argv[]){
     
@@ -128,7 +121,8 @@ int main(int argc, char* argv[]){
     stop_timer();
     double time = elapsed_time();
     printf( "Time: %lf (sec)\n",time);
-
+    res = checksum(d_O);
+    printf("res: %lf \n", res);
     //printf( "Time: %lf (sec), nFlops: %0.0lf, GFlopsS: %lf\n",
     //time, nFlops, nGFlopsPerSec);
     cudaFree(d_I);
