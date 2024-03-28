@@ -80,7 +80,7 @@ int main(int argc, char* argv[]){
             }
         }
     }
-
+    printf("init->F\n");
     // Initialize F filter
     for (int k = 0; k < K; ++k) {
         for (int c = 0; c < C; ++c) {
@@ -91,6 +91,7 @@ int main(int argc, char* argv[]){
             }
         }
     }
+    printf("init->Io\n");
     // Initialize I0 with padding
     for (int c = 0; c < C; ++c) {
         for (int x = 0; x < W + 2 * P; ++x) {
