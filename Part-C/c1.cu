@@ -79,6 +79,7 @@ int main(int argc, char* argv[]){
             }
         }
     }
+    printf("filter next \n");
     // init F filter
     for(int k = 0; k<K;++k){
         for(int c = 0;c<C;++c){
