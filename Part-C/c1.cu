@@ -76,7 +76,7 @@ int main(int argc, char* argv[]){
     for (int c = 0; c < C; ++c) {
         for (int x = 0; x < W; ++x) {
             for (int y = 0; y < H; ++y) {
-                I[c * W * H + x * H + y] = c * (x + y);
+                h_I[c * W * H + x * H + y] = c * (x + y);
             }
         }
     }
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]){
         for (int c = 0; c < C; ++c) {
             for (int i = 0; i < FH; ++i) {
                 for (int j = 0; j < FW; ++j) {
-                    F[k * C * FH * FW + c * FH * FW + i * FW + j] = (c + k) * (i + j);
+                    h_F[k * C * FH * FW + c * FH * FW + i * FW + j] = (c + k) * (i + j);
                 }
             }
         }
@@ -96,9 +96,9 @@ int main(int argc, char* argv[]){
         for (int x = 0; x < W + 2 * P; ++x) {
             for (int y = 0; y < H + 2 * P; ++y) {
                 if (x == 0 || y == 0 || x == W + 2 * P - 1 || y == H + 2 * P - 1) {
-                    I0[c * (W + 2 * P) * (H + 2 * P) + x * (H + 2 * P) + y] = 0;
+                    h_I0[c * (W + 2 * P) * (H + 2 * P) + x * (H + 2 * P) + y] = 0;
                 } else {
-                    I0[c * (W + 2 * P) * (H + 2 * P) + x * (H + 2 * P) + y] = I[c * W * H + (x - 1) * H + (y - 1)];
+                    h_Io[c * (W + 2 * P) * (H + 2 * P) + x * (H + 2 * P) + y] = I[c * W * H + (x - 1) * H + (y - 1)];
                 }
             }
         }
