@@ -51,7 +51,6 @@ int main(int argc, char* argv[]) {
      //dim3 dimGrid/;/(1);                    
      //dim3 dimBlock;//(1);                 
      // Set up execution configuration
-     printf("config");
      dim3 dimBlock, dimGrid;
      if (scenario == 1) {
          dimGrid = dim3(1); // One block
@@ -63,10 +62,10 @@ int main(int argc, char* argv[]) {
          dimGrid = dim3((size + blockSize - 1) / blockSize); // Adjust number of blocks based on size
          dimBlock = dim3(blockSize); // 256 threads per block
      }
-     printf(" are done\n");
+    
      // Allocate input vectors h_A and h_B in host memory
     float *a,*b,*c; 
-     printf("before cudaMalloc"); 
+
     
     // Allocate vectors in device memory.
      cudaMallocManaged(&a, size);
@@ -78,7 +77,7 @@ int main(int argc, char* argv[]) {
      a[i] = 1;//(float)i;
      b[i] = 1;//(float)(N-i);   
     }
-    printf("before the warm-up\n"); 
+    
     // Warm up
      AddVectors<<<dimGrid, dimBlock>>>(a, b, c, N);
     // error = cudaGetLastError();
@@ -86,7 +85,6 @@ int main(int argc, char* argv[]) {
      cudaDeviceSynchronize();
  
     // Initialize timer
-    printf("welcome pre timer\n");
     initialize_timer();
     start_timer();
 
