@@ -31,4 +31,4 @@ c3.o: c3.cu #### -lcudnn to link
 	${NVCC} $< -c -o $@ $(OPTIONS) -lcudnn 
 #######################################################################
 c3 : c3.o timer.o 
-	${NVCC} $^ -o $@ $(LIB) $(OPTIONS)
+	${NVCC} $^ -o $@ $(LIB) $(OPTIONS) -lcudnn

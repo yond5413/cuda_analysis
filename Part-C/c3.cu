@@ -83,7 +83,7 @@ int main(int argc, char* argv[]){
 ////////////////////////////////////////
     cudnnHandle_t c3;
     cudnnCreate(&c3);
-    printf("Created c3?");
+    printf("Created c3?\n");
     cudnnTensorDescriptor_t in_descript, out_descript;
     cudnnFilterDescriptor_t filter_descript;
     cudnnConvolutionDescriptor_t convo_descript;
