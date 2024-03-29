@@ -97,7 +97,7 @@ int main(int argc, char* argv[]){
     int alg;
     cudnnGetConvolutionForwardAlgorithm_v7(c3,in_descript,filter_descript,convo_descript,
     out_descript,1,&alg,&prefered_convo_alg);
-    cudnnConvolutionFwdAlgo_t algo = prefered_convo_algorithm.algo;
+    cudnnConvolutionFwdAlgo_t algo = prefered_convo_alg.algo;
     double alpha = 1.0, beta = 0.0;
     initialize_timer();
     start_timer();
