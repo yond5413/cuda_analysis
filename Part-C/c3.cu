@@ -103,7 +103,7 @@ int main(int argc, char* argv[]){
     start_timer();
     
     cudnnConvolutionForward(c3,&alpha,in_descript,d_Io,filter_descript,d_F,
-    convo_descript,alg, nullptr,0,&beta,out_descript,d_O);
+    convo_descript,algo, nullptr,0,&beta,out_descript,d_O);
     stop_timer();
     cudaMemcpy(h_O, d_O, sizeof(double) * size_O, cudaMemcpyDeviceToHost);
     
