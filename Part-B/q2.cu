@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
     stop_timer();
     double time = elapsed_time();
 
-    printf( "Time: %lf (sec),", 
+    printf( "Time: %lf (sec)\n", 
              time);
     //printf( "Time: %lf (sec), GFlopsS: %lf, GBytesS: %lf\n", 
     //         time, nGFlopsPerSec, nGBytesPerSec);
