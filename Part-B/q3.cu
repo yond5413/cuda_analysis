@@ -20,7 +20,7 @@ __global__ void AddVectors(const float* A, const float* B, float* C, int N)
 void Cleanup(bool);
 int main(int argc, char* argv[]) {
     if (argc != 3) {
-        printf("Usage: %s <scenario>\n", argv[0]);
+        printf("Usage: %s <scenario> <size in millions>\n", argv[0]);
         printf("Available scenarios:\n");
         printf("1 - One block with 1 thread\n");
         printf("2 - One block with 256 threads\n");
