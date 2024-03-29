@@ -86,7 +86,7 @@ int main(int argc, char* argv[]){
 
     cudnnTensorDescriptor_t in_descript, out_descript;
     cudnnFilterDescriptor_t filter_descript;
-    cudnnConvolutionDescriptor_t convo_descipt;
+    cudnnConvolutionDescriptor_t convo_descript;
 
     cudnnCreateTensorDescriptor(&in_descript);
     cudnnCreateTensorDescriptor(&out_descript);
@@ -95,9 +95,9 @@ int main(int argc, char* argv[]){
     
     cudnnConvolutionFwdAlgoPerf_t prefered_convo_alg;
     int alg;
-    cudnnGetConvolutionForwardAlgorithm_v7(c3,input_descript,filter_descript,convo_descipt,
+    cudnnGetConvolutionForwardAlgorithm_v7(c3,in_descript,filter_descript,convo_descript,
     out_descript,1,&alg,&prefered_convo_alg);
-    cudnnConvolutionFwdAlgo_t algo = convolution_algorithm.algo;
+    cudnnConvolutionFwdAlgo_t algo = prefered_convo_algorithm.algo;
     double alpha = 1.0, beta = 0.0;
     initialize_timer();
     start_timer();
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]){
     cudaMemcpy(h_O, d_O, sizeof(double) * size_O, cudaMemcpyDeviceToHost);
     
     double time = elapsed_time();
-    double res = calculateChecksum(host_output);
+    double res = checksum(h_O);
     printf( "checkSum: %lf\ntime: %lf\n", res,  time);
     
     return 0;
