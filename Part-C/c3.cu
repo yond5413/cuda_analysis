@@ -111,6 +111,6 @@ int main(int argc, char* argv[]){
     time = time* 100;
     double res = checksum(h_O);
     //printf( "checkSum: %lf\ntime: %lf\n", res,  time);
-    printf("Checksum: %lf, ExcecutionTime: %lf",res,time);
+    printf("Checksum: %lf, ExcecutionTime: %lf \n",res,time);
     return 0;
 }

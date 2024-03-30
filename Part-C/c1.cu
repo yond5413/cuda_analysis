@@ -127,7 +127,7 @@ int main(int argc, char* argv[]){
     //printf("res: %lf \n", res);
     //printf( "Time: %lf (sec), nFlops: %0.0lf, GFlopsS: %lf\n",
     //time, nFlops, nGFlopsPerSec);
-    printf("Checksum: %lf, ExcecutionTime: %lf",res,time);
+    printf("Checksum: %lf, ExcecutionTime: %lf \n",res,time);
     cudaFree(d_I);
     cudaFree(d_Io);
     cudaFree(d_F);
