@@ -18,7 +18,7 @@ double *d_Io,*h_Io;
 __global__ void convolution(double *I,double *F, double *O){
     int row = blockIdx.y * blockDim.y + threadIdx.y; // Global row index
     int col = blockIdx.x * blockDim.x + threadIdx.x; // Global column index
-    int c_out_ = blockIdx.z; // Output channel index
+    int out_c = blockIdx.z; // Output channel index
     double O_value = 0.0;
     // Perform convolution for each pixel
     for (int i = 0; i < FH; ++i) {
@@ -35,7 +35,7 @@ __global__ void convolution(double *I,double *F, double *O){
         }
     }
     // Store the result in the output tensor
-    O[c_out_idx * (H * W) + row * W + col] = O_value;
+    O[out_c* (H * W) + row * W + col] = O_value;
 }
 
 double checksum(double* O) {
