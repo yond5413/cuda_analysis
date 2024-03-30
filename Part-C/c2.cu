@@ -21,22 +21,22 @@ __global__ void convolution(double *I,double *F, double *O){
     //double *Isub, *Fsub, *Osub;
     __shared__ double temp[BLOCK_SIZE + FW - 1][BLOCK_SIZE + FH - 1];
 
-    int row_idx = blockIdx.y * blockDim.y + threadIdx.y; // Global row index
-    int col_idx = blockIdx.x * blockDim.x + threadIdx.x; // Global column index
-    int c_out_idx = blockIdx.z;                          // Output channel index
+    int row = blockIdx.y * blockDim.y + threadIdx.y; // actuall row index
+    int col = blockIdx.x * blockDim.x + threadIdx.x; // actualcolumn index
+    int out_c = blockIdx.z;                          // Output channel index
 
     double O_value = 0.0;
-
-    // Load data into shared memory with padding
-    int temp_row = threadIdx.y;
-    int temp_col = threadIdx.x;
-    int global_row = blockIdx.y * blockDim.y + temp_row;
-    int global_col = blockIdx.x * blockDim.x + temp_col;
+    // Load data into shared memory with padding 
+    int curr_row = threadIdx.y;
+    int curr_col = threadIdx.x;
+    //////////
+    int main_row = blockIdx.y * blockDim.y + curr_row;
+    int main_col = blockIdx.x * blockDim.x + curr_col;
 
     if (global_row < H && global_col < W) {
-        temp[temp_row][temp_col] = I[c_out_idx * (H * W) + global_row * W + global_col];
+        temp[curr_row][curr_col] = I[out_c * (H * W) +main_row * W + main_col];
     } else {
-        temp[temp_row][temp_col] = 0.0; // Zero-padding for out-of-bounds elements
+        temp[curr_row][curr_col] = 0.0; // Zero-padding for out-of-bounds elements
     }
 
     __syncthreads();
@@ -51,9 +51,9 @@ __global__ void convolution(double *I,double *F, double *O){
     }
 
     // Store the result in the output tensor
-    //if (row_idx < H && col_idx < W) {
-        O[c_out_idx * (H * W) + row_idx * W + col_idx] = O_value;
-    //}
+    if (row_idx < H && col_idx < W) {
+        O[out_c * (H * W) + row * W + col] = O_value;
+    }
     
 }
 
