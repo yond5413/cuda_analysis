@@ -29,7 +29,7 @@ __global__ void convolution(double *I,double *F, double *O){
                 int col_off = col - P + j;
                 // Check if the pixel is within the input image boundaries
                 if (row_off >= 0 && row_off < H && col_off >= 0 && col_off < W) {
-                    O_value += I[c * (H * W) + row_offset * W + col_offset] * F[c_out_idx * (C * FH * FW) + c * (FH * FW) + i * FW + j];
+                    O_value += I[c * (H * W) + row_off * W + col_off] * F[c_out_idx * (C * FH * FW) + c * (FH * FW) + i * FW + j];
                 }
             }
         }
