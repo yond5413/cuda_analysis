@@ -16,19 +16,17 @@ double *d_I,*d_F,*d_O, *h_I,*h_F,*h_O;
 double *d_Io,*h_Io;
 
 __global__ void convolution(double *I,double *F, double *O){
-    int row_idx = blockIdx.y * blockDim.y + threadIdx.y; // Global row index
-    int col_idx = blockIdx.x * blockDim.x + threadIdx.x; // Global column index
-    int c_out_idx = blockIdx.z; // Output channel index
-
+    int row = blockIdx.y * blockDim.y + threadIdx.y; // Global row index
+    int col = blockIdx.x * blockDim.x + threadIdx.x; // Global column index
+    int c_out_ = blockIdx.z; // Output channel index
     double O_value = 0.0;
-
     // Perform convolution for each pixel
     for (int i = 0; i < FH; ++i) {
         for (int j = 0; j < FW; ++j) {
             for (int c = 0; c < C; ++c) {
-                int row_offset = row_idx - P + i;
-                int col_offset = col_idx - P + j;
-
+                // computing hte offsets here 
+                int row_off = row- P + i;   
+                int col_off = col - P + j;
                 // Check if the pixel is within the input image boundaries
                 if (row_offset >= 0 && row_offset < H && col_offset >= 0 && col_offset < W) {
                     O_value += I[c * (H * W) + row_offset * W + col_offset] * F[c_out_idx * (C * FH * FW) + c * (FH * FW) + i * FW + j];

@@ -51,9 +51,9 @@ __global__ void convolution(double *I,double *F, double *O){
     }
 
     // Store the result in the output tensor
-    if (row_idx < H && col_idx < W) {
+    //if (row_idx < H && col_idx < W) {
         O[c_out_idx * (H * W) + row_idx * W + col_idx] = O_value;
-    }
+    //}
     
 }
 
