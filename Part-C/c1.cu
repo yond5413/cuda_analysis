@@ -35,7 +35,7 @@ __global__ void convolution(double *I,double *F, double *O){
         }
     }
     // Store the result in the output tensor
-    O[c_out_idx * (H * W) + row_idx * W + col_idx] = O_value;
+    O[c_out_idx * (H * W) + row * W + col] = O_value;
 }
 
 double checksum(double* O) {
