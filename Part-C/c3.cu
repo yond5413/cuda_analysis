@@ -81,6 +81,9 @@ int main(int argc, char* argv[]){
         cudaMemcpy(d_Io,h_Io,size_Io * sizeof(double),cudaMemcpyHostToDevice);
         cudaMemcpy(d_F,h_F,size_F * sizeof(double),cudaMemcpyHostToDevice);
 ////////////////////////////////////////
+    /*
+    https://docs.nvidia.com/deeplearning/cudnn/api/cudnn-cnn-library.html
+    */
     cudnnHandle_t c3;
     cudnnCreate(&c3);
     printf("Created c3?\n");
@@ -95,8 +98,10 @@ int main(int argc, char* argv[]){
     
     cudnnConvolutionFwdAlgoPerf_t prefered_convo_alg;
     int alg;
-    cudnnGetConvolutionForwardAlgorithm_v7(c3,in_descript,filter_descript,convo_descript,
+    cudnnGetConvolutionForwardWorkspaceSize(c3,in_descript,filter_descript,convo_descript,
     out_descript,1,&alg,&prefered_convo_alg);
+    //cudnnGetConvolutionForwardAlgorithm_v7(c3,in_descript,filter_descript,convo_descript,
+    //out_descript,1,&alg,&prefered_convo_alg);
     cudnnConvolutionFwdAlgo_t algo = prefered_convo_alg.algo;
     double alpha = 1.0, beta = 0.0;
     initialize_timer();
