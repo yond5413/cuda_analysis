@@ -99,11 +99,11 @@ int main(int argc, char* argv[]){
     cudnnConvolutionFwdAlgoPerf_t prefered_convo_alg;
     int alg;
     
-    cudnnGetConvolutionForwardAlgorithm(c3, in_descript, filter_descript, convo_descript, out_descript, CUDNN_CONVOLUTION_FWD_PREFER_FASTEST
-    , 0, &prefered_convo_alg);
-
-    //cudnnGetConvolutionForwardAlgorithm_v7(c3,in_descript,filter_descript,convo_descript,
-    //out_descript,1,&alg,&prefered_convo_alg);
+    //cudnnGetConvolutionForwardAlgorithm(c3, in_descript, filter_descript, convo_descript, out_descript, CUDNN_CONVOLUTION_FWD_PREFER_FASTEST
+    //, 0, &prefered_convo_alg);
+        // tried above but kept getting undefined errors 
+    cudnnGetConvolutionForwardAlgorithm_v7(c3,in_descript,filter_descript,convo_descript,
+    out_descript,1,&alg,&prefered_convo_alg);
     cudnnConvolutionFwdAlgo_t algo = prefered_convo_alg.algo;
     double alpha = 1.0, beta = 0.0;
     initialize_timer();
