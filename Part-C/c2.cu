@@ -44,8 +44,8 @@ __global__ void convolution(double *I,double *F, double *O){
     // Perform convolution for each pixel
     for (int i = 0; i < FH; ++i) {
         for (int j = 0; j < FW; ++j) {
-            int conv_row = temp_row + i;
-            int conv_col = temp_col + j;
+            int conv_row = curr_row + i;
+            int conv_col = curr_col + j;
             O_value += temp[conv_row][conv_col] * F[c_out_idx * (C * FH * FW) + i * FW + j];
         }
     }
