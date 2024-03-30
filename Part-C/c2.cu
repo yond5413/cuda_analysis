@@ -32,8 +32,8 @@ __global__ void convolution(double *I,double *F, double *O){
     //////////
     int main_row = blockIdx.y * blockDim.y + curr_row;
     int main_col = blockIdx.x * blockDim.x + curr_col;
-
-    if (global_row < H && global_col < W) {
+    // boundary check
+    if (main_row < H && main_col < W) {
         temp[curr_row][curr_col] = I[out_c * (H * W) +main_row * W + main_col];
     } else {
         temp[curr_row][curr_col] = 0.0; // Zero-padding for out-of-bounds elements
@@ -46,12 +46,12 @@ __global__ void convolution(double *I,double *F, double *O){
         for (int j = 0; j < FW; ++j) {
             int conv_row = curr_row + i;
             int conv_col = curr_col + j;
-            O_value += temp[conv_row][conv_col] * F[c_out_idx * (C * FH * FW) + i * FW + j];
+            O_value += temp[conv_row][conv_col] * F[out_c * (C * FH * FW) + i * FW + j];
         }
     }
 
     // Store the result in the output tensor
-    if (row_idx < H && col_idx < W) {
+    if (row < H && col < W) {
         O[out_c * (H * W) + row * W + col] = O_value;
     }
     
