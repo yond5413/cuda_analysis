@@ -120,12 +120,14 @@ int main(int argc, char* argv[]){
     cudaDeviceSynchronize();
     stop_timer();
     double time = elapsed_time();
-    printf( "Time: %lf (sec)\n",time);
+    time = time* 100;
+    //printf( "Time: %lf (sec)\n",time);
     cudaMemcpy(h_O, d_O, size_O*sizeof(double), cudaMemcpyDeviceToHost);
     double res = checksum(h_O);
-    printf("res: %lf \n", res);
+    //printf("res: %lf \n", res);
     //printf( "Time: %lf (sec), nFlops: %0.0lf, GFlopsS: %lf\n",
     //time, nFlops, nGFlopsPerSec);
+    printf("Checksum: %lf, ExcecutionTime: %lf",res,time);
     cudaFree(d_I);
     cudaFree(d_Io);
     cudaFree(d_F);

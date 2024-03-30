@@ -108,8 +108,9 @@ int main(int argc, char* argv[]){
     cudaMemcpy(h_O, d_O, sizeof(double) * size_O, cudaMemcpyDeviceToHost);
     
     double time = elapsed_time();
+    time = time* 100;
     double res = checksum(h_O);
-    printf( "checkSum: %lf\ntime: %lf\n", res,  time);
-    
+    //printf( "checkSum: %lf\ntime: %lf\n", res,  time);
+    printf("Checksum: %lf, ExcecutionTime: %lf",res,time);
     return 0;
 }
