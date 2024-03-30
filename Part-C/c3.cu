@@ -98,7 +98,7 @@ int main(int argc, char* argv[]){
     
     cudnnConvolutionFwdAlgoPerf_t prefered_convo_alg;
     int alg;
-    cudnnGetConvolutionForwardWorkspaceSize(c3,in_descript,filter_descript,convo_descript,,out_descript,size_O);
+    cudnnGetConvolutionForwardWorkspaceSize(c3,in_descript,filter_descript,convo_descript,,out_descript,prefered_convo_alg,size_O);
     //cudnnGetConvolutionForwardAlgorithm_v7(c3,in_descript,filter_descript,convo_descript,
     //out_descript,1,&alg,&prefered_convo_alg);
     cudnnConvolutionFwdAlgo_t algo = prefered_convo_alg.algo;
